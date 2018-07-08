@@ -1,48 +1,48 @@
-// Copyright (c) Athena Dev Teams - Licensed under GNU GPL
+// Copyright (c) rAthena Dev Teams - Licensed under GNU GPL
 // For more information, see LICENCE in the main folder
 
 #include "skill.hpp"
 
+#include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
-#include <math.h>
 
 #include "../common/cbasetypes.hpp"
-#include "../common/timer.hpp"
-#include "../common/nullpo.hpp"
+#include "../common/ers.hpp"
 #include "../common/malloc.hpp"
+#include "../common/nullpo.hpp"
 #include "../common/random.hpp"
 #include "../common/showmsg.hpp"
 #include "../common/strlib.hpp"
+#include "../common/timer.hpp"
 #include "../common/utils.hpp"
-#include "../common/ers.hpp"
 
-#include "map.hpp"
-#include "path.hpp"
-#include "clif.hpp"
-#include "pc.hpp"
-#include "status.hpp"
-#include "pet.hpp"
-#include "homunculus.hpp"
-#include "mercenary.hpp"
-#include "elemental.hpp"
-#include "mob.hpp"
-#include "npc.hpp"
+#include "achievement.hpp"
 #include "battle.hpp"
 #include "battleground.hpp"
-#include "party.hpp"
-#include "itemdb.hpp"
-#include "script.hpp"
-#include "intif.hpp"
-#include "log.hpp"
 #include "chrif.hpp"
-#include "guild.hpp"
+#include "clif.hpp"
 #include "date.hpp"
-#include "unit.hpp"
-#include "achievement.hpp"
+#include "elemental.hpp"
+#include "guild.hpp"
+#include "homunculus.hpp"
+#include "intif.hpp"
+#include "itemdb.hpp"
+#include "log.hpp"
+#include "map.hpp"
+#include "mercenary.hpp"
+#include "mob.hpp"
+#include "npc.hpp"
+#include "party.hpp"
+#include "path.hpp"
+#include "pc.hpp"
 #include "pc_groups.hpp"
+#include "pet.hpp"
+#include "script.hpp"
+#include "status.hpp"
+#include "unit.hpp"
 
 #define SKILLUNITTIMER_INTERVAL	100
 #define TIMERSKILL_INTERVAL	150
@@ -635,7 +635,7 @@ static int8 skill_isCopyable(struct map_session_data *sd, uint16 skill_idx) {
 		return 1;
 
 	//Reproduce can copy skill if SC__REPRODUCE is active and the skill is copyable by Reproduce
-	if (skill_db[skill_idx]->copyable.option&2 && pc_checkskill(sd,SC_REPRODUCE) && &sd->sc && sd->sc.data[SC__REPRODUCE] && sd->sc.data[SC__REPRODUCE]->val1)
+	if (skill_db[skill_idx]->copyable.option&2 && pc_checkskill(sd,SC_REPRODUCE) && sd->sc.data[SC__REPRODUCE] && sd->sc.data[SC__REPRODUCE]->val1)
 		return 2;
 
 	return 0;
@@ -705,7 +705,7 @@ bool skill_isNotOk(uint16 skill_id, struct map_session_data *sd)
 			return true;
 	}
 
-	if( &sd->sc && sd->sc.data[SC_ALL_RIDING] )
+	if( sd->sc.data[SC_ALL_RIDING] )
 		return true; //You can't use skills while in the new mounts (The client doesn't let you, this is to make cheat-safe)
 
 	switch (skill_id) {
@@ -2177,8 +2177,6 @@ int skill_additional_effect(struct block_list* src, struct block_list *bl, uint1
 		{
 			if( rnd()%1000 >= sd->autobonus[i].rate )
 				continue;
-			if( sd->autobonus[i].active != INVALID_TIMER )
-				continue;
 			if(!( ((sd->autobonus[i].atk_type)&attack_type)&BF_WEAPONMASK &&
 				  ((sd->autobonus[i].atk_type)&attack_type)&BF_RANGEMASK &&
 				  ((sd->autobonus[i].atk_type)&attack_type)&BF_SKILLMASK))
@@ -2280,8 +2278,6 @@ int skill_onskillusage(struct map_session_data *sd, struct block_list *bl, uint1
 	if( sd && sd->autobonus3[0].rate ) {
 		for( i = 0; i < ARRAYLENGTH(sd->autobonus3); i++ ) {
 			if( rnd()%1000 >= sd->autobonus3[i].rate )
-				continue;
-			if( sd->autobonus3[i].active != INVALID_TIMER )
 				continue;
 			if( sd->autobonus3[i].atk_type != skill_id )
 				continue;
@@ -2515,8 +2511,6 @@ int skill_counter_additional_effect (struct block_list* src, struct block_list *
 		int i;
 		for( i = 0; i < ARRAYLENGTH(dstsd->autobonus2); i++ ) {
 			if( rnd()%1000 >= dstsd->autobonus2[i].rate )
-				continue;
-			if( dstsd->autobonus2[i].active != INVALID_TIMER )
 				continue;
 			if(!( ((dstsd->autobonus2[i].atk_type)&attack_type)&BF_WEAPONMASK &&
 				  ((dstsd->autobonus2[i].atk_type)&attack_type)&BF_RANGEMASK &&
@@ -2960,7 +2954,7 @@ static void skill_do_copy(struct block_list* src,struct block_list *bl, uint16 s
 	if (!tsd || (!pc_checkskill(tsd,RG_PLAGIARISM) && !pc_checkskill(tsd,SC_REPRODUCE)))
 		return;
 	//If SC_PRESERVE is active and SC__REPRODUCE is not active, nothing to do
-	else if (&tsd->sc && tsd->sc.data[SC_PRESERVE] && !tsd->sc.data[SC__REPRODUCE])
+	else if (tsd->sc.data[SC_PRESERVE] && !tsd->sc.data[SC__REPRODUCE])
 		return;
 	else {
 		uint16 idx;
@@ -4656,6 +4650,8 @@ int skill_castend_damage_id (struct block_list* src, struct block_list *bl, uint
 	case RK_SONICWAVE:
 	case AB_DUPLELIGHT_MELEE:
 	case RA_AIMEDBOLT:
+	case NC_BOOSTKNUCKLE:
+	case NC_PILEBUNKER:
 	case NC_AXEBOOMERANG:
 	case NC_POWERSWING:
 	case NC_MAGMA_ERUPTION:
@@ -4685,11 +4681,6 @@ int skill_castend_damage_id (struct block_list* src, struct block_list *bl, uint
 		skill_attack(BF_WEAPON,src,src,bl,skill_id,skill_lv,tick,flag);
 		break;
 
-	case NC_BOOSTKNUCKLE:
-	case NC_PILEBUNKER:
-	case NC_COLDSLOWER:
-		if (sd)
-			pc_overheat(sd, 1);
 	case MO_TRIPLEATTACK:
 	case RK_WINDCUTTER:
 		skill_attack(BF_WEAPON,src,src,bl,skill_id,skill_lv,tick,flag|SD_ANIMATION);
@@ -4752,7 +4743,6 @@ int skill_castend_damage_id (struct block_list* src, struct block_list *bl, uint
 		break;
 
 	case NC_FLAMELAUNCHER:
-		if (sd) pc_overheat(sd,1);
 	case LG_CANNONSPEAR:
 		if(skill_id == LG_CANNONSPEAR)
 			clif_skill_damage(src, bl, tick, status_get_amotion(src), 0, -30000, 1, skill_id, skill_lv, DMG_SKILL);
@@ -4925,6 +4915,7 @@ int skill_castend_damage_id (struct block_list* src, struct block_list *bl, uint
 	case RA_ARROWSTORM:
 	case RA_WUGDASH:
 	case NC_VULCANARM:
+	case NC_COLDSLOWER:
 	case NC_SELFDESTRUCTION:
 	case NC_AXETORNADO:
 	case GC_ROLLINGCUTTER:
@@ -5003,18 +4994,13 @@ int skill_castend_damage_id (struct block_list* src, struct block_list *bl, uint
 					break;
 				case WM_REVERBERATION_MELEE:
 				case WM_REVERBERATION_MAGIC:
+				case NC_ARMSCANNON:
 					skill_area_temp[1] = 0;
 					starget = splash_target(src);
 					break;
 				case WL_CRIMSONROCK:
 					skill_area_temp[4] = bl->x;
 					skill_area_temp[5] = bl->y;
-					break;
-				case NC_ARMSCANNON:
-					starget = splash_target(src);
-				case NC_VULCANARM:
-					if (sd)
-						pc_overheat(sd, 1);
 					break;
 			}
 
@@ -5690,9 +5676,8 @@ int skill_castend_damage_id (struct block_list* src, struct block_list *bl, uint
 				status_change_end(bl, SC__SHADOWFORM, INVALID_TIMER);
 			sc_start(src,bl, SC_INFRAREDSCAN, 10000, skill_lv, skill_get_time(skill_id, skill_lv));
 		} else {
+			clif_skill_damage(src,bl,tick, status_get_amotion(src), 0, -30000, 1, skill_id, skill_lv, DMG_SKILL);
 			map_foreachinallrange(skill_area_sub, bl, skill_get_splash(skill_id, skill_lv), splash_target(src), src, skill_id, skill_lv, tick, flag|BCT_ENEMY|SD_SPLASH|1, skill_castend_damage_id);
-			clif_skill_damage(src,src,tick, status_get_amotion(src), 0, -30000, 1, skill_id, skill_lv, DMG_SKILL);
-			if( sd ) pc_overheat(sd,1);
 		}
 		break;
 
@@ -6827,7 +6812,7 @@ int skill_castend_nodamage_id (struct block_list *src, struct block_list *bl, ui
 			}
 			sd->mission_mobid = id;
 			sd->mission_count = 0;
-			pc_setglobalreg(sd, add_str("TK_MISSION_ID"), id);
+			pc_setglobalreg(sd, add_str(TKMISSIONID_VAR), id);
 			clif_mission_info(sd, id, 0);
 			clif_skill_nodamage(src,bl,skill_id,skill_lv,1);
 		}
@@ -7059,11 +7044,6 @@ int skill_castend_nodamage_id (struct block_list *src, struct block_list *bl, ui
 	}
 		break;
 
-	case NC_EMERGENCYCOOL:
-		clif_skill_nodamage(src,bl,skill_id,skill_lv,1);
-		status_change_end(src,SC_OVERHEAT_LIMITPOINT,INVALID_TIMER);
-		status_change_end(src,SC_OVERHEAT,INVALID_TIMER);
-		break;
 	case SR_WINDMILL:
 	case GN_CART_TORNADO:
 		clif_skill_nodamage(src,bl,skill_id,skill_lv,1);
@@ -7211,7 +7191,7 @@ int skill_castend_nodamage_id (struct block_list *src, struct block_list *bl, ui
 	case SL_KAUPE:
 		if (sd) {
 			if (!dstsd || !(
-				(&sd->sc && sd->sc.data[SC_SPIRIT] && sd->sc.data[SC_SPIRIT]->val2 == SL_SOULLINKER) ||
+				(sd->sc.data[SC_SPIRIT] && sd->sc.data[SC_SPIRIT]->val2 == SL_SOULLINKER) ||
 				(dstsd->class_&MAPID_UPPERMASK) == MAPID_SOUL_LINKER ||
 				dstsd->status.char_id == sd->status.char_id ||
 				dstsd->status.char_id == sd->status.partner_id ||
@@ -7239,11 +7219,6 @@ int skill_castend_nodamage_id (struct block_list *src, struct block_list *bl, ui
 		if (tsce)
 		{
 			clif_skill_nodamage(src,bl,skill_id,-1,status_change_end(bl, type, INVALID_TIMER)); //Hide skill-scream animation.
-			map_freeblock_unlock();
-			return 0;
-		} else if( tsc && tsc->option&OPTION_MADOGEAR ) {
-			//Mado Gear cannot hide
-			if( sd ) clif_skill_fail(sd,skill_id,USESKILL_FAIL_LEVEL,0);
 			map_freeblock_unlock();
 			return 0;
 		}
@@ -7359,7 +7334,7 @@ int skill_castend_nodamage_id (struct block_list *src, struct block_list *bl, ui
 			if(status_isimmune(bl) || !tsc)
 				break;
 
-			if (sd && &sd->sc && sd->sc.data[SC_PETROLOGY_OPTION])
+			if (sd && sd->sc.data[SC_PETROLOGY_OPTION])
 				brate = sd->sc.data[SC_PETROLOGY_OPTION]->val3;
 
 			if (tsc && tsc->data[type]) {
@@ -8733,7 +8708,7 @@ int skill_castend_nodamage_id (struct block_list *src, struct block_list *bl, ui
 		if (skill_id == SL_SUPERNOVICE && dstsd && dstsd->die_counter && !(rnd()%100))
 		{	//Erase death count 1% of the casts
 			dstsd->die_counter = 0;
-			pc_setglobalreg(dstsd, add_str("PC_DIE_COUNTER"), 0);
+			pc_setglobalreg(dstsd, add_str(PCDIECOUNTER_VAR), 0);
 			clif_specialeffect(bl, EF_ANGEL2, AREA);
 			//SC_SPIRIT invokes status_calc_pc for us.
 		}
@@ -9658,11 +9633,24 @@ int skill_castend_nodamage_id (struct block_list *src, struct block_list *bl, ui
 		}
 		break;
 
+	case NC_EMERGENCYCOOL:
+		clif_skill_nodamage(src, bl, skill_id, skill_lv, 1);
+		if (sd) {
+			struct skill_condition req = skill_get_requirement(sd, skill_id, skill_lv);
+			int16 limit[] = { -45, -75, -105 };
+			uint8 i;
+
+			for (i = 0; i < req.eqItem_count; i++) {
+				if (pc_search_inventory(sd, req.eqItem[i]) != -1)
+					break;
+			}
+			pc_overheat(sd, limit[i]);
+		}
+		break;
+
 	case NC_ANALYZE:
 		clif_skill_damage(src, bl, tick, status_get_amotion(src), 0, -30000, 1, skill_id, skill_lv, DMG_SKILL);
-		clif_skill_nodamage(src, bl, skill_id, skill_lv,
-			sc_start(src,bl,type, 30 + 12 * skill_lv,skill_lv,skill_get_time(skill_id,skill_lv)));
-		if( sd ) pc_overheat(sd,1);
+		sc_start(src,bl,type, 30 + 12 * skill_lv,skill_lv,skill_get_time(skill_id,skill_lv));
 		break;
 
 	case NC_MAGNETICFIELD:
@@ -9670,8 +9658,6 @@ int skill_castend_nodamage_id (struct block_list *src, struct block_list *bl, ui
 		if (map_flag_vs(src->m)) // Doesn't affect the caster in non-PVP maps [exneval]
 			sc_start2(src,bl,type,100,skill_lv,src->id,skill_get_time(skill_id,skill_lv));
 		map_foreachinallrange(skill_area_sub,bl,skill_get_splash(skill_id,skill_lv),splash_target(src),src,skill_id,skill_lv,tick,flag|BCT_ENEMY|SD_SPLASH|1,skill_castend_damage_id);
-		if (sd)
-			pc_overheat(sd,1);
 		break;
 
 	case NC_REPAIR:
@@ -12153,7 +12139,6 @@ int skill_castend_pos2(struct block_list* src, int x, int y, uint16 skill_id, ui
 		skill_clear_unitgroup(src); // To remove previous skills - cannot used combined
 		if( (sg = skill_unitsetting(src,skill_id,skill_lv,src->x,src->y,0)) != NULL ) {
 			sc_start2(src,src,skill_id == NC_NEUTRALBARRIER ? SC_NEUTRALBARRIER_MASTER : SC_STEALTHFIELD_MASTER,100,skill_lv,sg->group_id,skill_get_time(skill_id,skill_lv));
-			if( sd ) pc_overheat(sd,1);
 		}
 		break;
 
@@ -13535,13 +13520,6 @@ static int skill_unit_onplace(struct skill_unit *unit, struct block_list *bl, un
 				status_change_start(ss, bl, type, 10000, sg->skill_lv, 0, 0, 0, sg->limit, SCSTART_NOICON);
 			break;
 
-		case UNT_CLOUD_KILL:
-			if(!sce) {
-				sc_start4(ss, bl, type, 100, sg->skill_lv, ss->id, unit->bl.id, 0, skill_get_time(sg->skill_id, sg->skill_lv));
-				status_change_start(ss, bl, SC_POISON, 10000, sg->skill_lv, ss->id, 0, 0, skill_get_time2(sg->skill_id, sg->skill_lv), SCSTART_NOTICKDEF);
-			}
-			break;
-
 		case UNT_WARMER:
 			if (!sce && bl->type == BL_PC && !battle_check_undead(tstatus->race, tstatus->def_ele) && tstatus->race != RC_DEMON)
 				sc_start2(ss, bl, type, 100, sg->skill_lv, ss->id, skill_get_time(sg->skill_id, sg->skill_lv));
@@ -14183,6 +14161,12 @@ int skill_unit_onplace_timer(struct skill_unit *unit, struct block_list *bl, uns
 			sc_start(ss, bl, type, 100, sg->skill_lv, sg->interval);
 			break;
 
+		case UNT_CLOUD_KILL:
+			if (tsc && !tsc->data[type])
+				status_change_start(ss, bl, type, 10000, sg->skill_lv, ss->id, 0, 0, skill_get_time2(sg->skill_id, sg->skill_lv), SCSTART_NOTICKDEF);
+			skill_attack(skill_get_type(sg->skill_id), ss, &unit->bl, bl, sg->skill_id, sg->skill_lv, tick, 0);
+			break;
+
 		case UNT_VACUUM_EXTREME:
 			if (tsc && (tsc->data[SC_HALLUCINATIONWALK] || tsc->data[SC_HOVERING] || tsc->data[SC_VACUUM_EXTREME] ||
 				(tsc->data[SC_VACUUM_EXTREME_POSTDELAY] && tsc->data[SC_VACUUM_EXTREME_POSTDELAY]->val2 == sg->group_id))) // Ignore post delay from other vacuum (this will make stack effect enabled)
@@ -14412,7 +14396,6 @@ int skill_unit_onleft(uint16 skill_id, struct block_list *bl, unsigned int tick)
 		case EL_WATER_BARRIER:
 		case EL_ZEPHYR:
 		case EL_POWER_OF_GAIA:
-		case SO_CLOUD_KILL:
 		case SO_WARMER:
 		case SO_FIRE_INSIGNIA:
 		case SO_WATER_INSIGNIA:
@@ -14941,10 +14924,9 @@ bool skill_check_condition_castbegin(struct map_session_data* sd, uint16 skill_i
 			return false; // in official there is no message.
 	}
 	if( pc_ismadogear(sd) ) {
-		//None Mado skills are unusable when Mado is equipped. [Jobbie]
-		//Only Mechanic exlcusive skill can be used.
-		if(inf3&INF3_DIS_MADO){
-			clif_skill_fail(sd,skill_id,USESKILL_FAIL_LEVEL,0);
+		// Skills that are unusable when Mado is equipped. [Jobbie]
+		if(!(inf3&INF3_USABLE_MADO)){
+			clif_skill_fail(sd,skill_id,USESKILL_FAIL_MADOGEAR_RIDE,0);
 			return false;
 		}
 	}
@@ -15538,12 +15520,6 @@ bool skill_check_condition_castbegin(struct map_session_data* sd, uint16 skill_i
 				return false;
 			}
 			break;
-		case RETURN_TO_ELDICASTES:
-			if( pc_ismadogear(sd) ) { //Cannot be used if Mado is equipped.
-				clif_skill_fail(sd,skill_id,USESKILL_FAIL_LEVEL,0);
-				return false;
-			}
-			break;
 		case KO_JYUMONJIKIRI:
 			if (sd->weapontype1 && (sd->weapontype2 || sd->status.shield))
 				return true;
@@ -15696,6 +15672,22 @@ bool skill_check_condition_castbegin(struct map_session_data* sd, uint16 skill_i
 							}else{
 								clif_skill_fail(sd,skill_id,USESKILL_FAIL_THIS_WEAPON,0);
 							}
+							return false;
+						} else
+							continue;
+					}
+					break;
+				case NC_ACCELERATION:
+				case NC_SELFDESTRUCTION:
+				case NC_SHAPESHIFT:
+				case NC_EMERGENCYCOOL:
+				case NC_MAGNETICFIELD:
+				case NC_NEUTRALBARRIER:
+				case NC_STEALTHFIELD:
+					if (pc_search_inventory(sd, reqeqit) == -1) {
+						count--;
+						if (!count) {
+							clif_skill_fail(sd, skill_id, USESKILL_FAIL_NEED_EQUIPMENT, require.eqItem[0]<<16);
 							return false;
 						} else
 							continue;
@@ -16596,6 +16588,8 @@ int skill_vfcastfix(struct block_list *bl, double time, uint16 skill_id, uint16 
 			fixcast_r = max(fixcast_r, sc->data[SC_DANCEWITHWUG]->val4);
 		if (sc->data[SC_HEAT_BARREL])
 			fixcast_r = max(fixcast_r, sc->data[SC_HEAT_BARREL]->val2);
+		if (sc->data[SC_FREEZING])
+			fixcast_r -= 50;
 		// Additive Fixed CastTime values
 		if (sc->data[SC_MANDRAGORA])
 			fixed += sc->data[SC_MANDRAGORA]->val1 * 500;
@@ -19440,7 +19434,7 @@ bool skill_produce_mix(struct map_session_data *sd, uint16 skill_id, unsigned sh
 					if (skill_produce_db[idx].itemlv > 10 && skill_produce_db[idx].itemlv <= 20) { //Cooking items.
 						clif_specialeffect(&sd->bl, EF_COOKING_OK, AREA);
 						if (sd->cook_mastery < 1999)
-							pc_setglobalreg(sd, add_str("COOK_MASTERY"), sd->cook_mastery + ( 1 << ( (skill_produce_db[idx].itemlv - 11) / 2 ) ) * 5);
+							pc_setglobalreg(sd, add_str(COOKMASTERY_VAR), sd->cook_mastery + ( 1 << ( (skill_produce_db[idx].itemlv - 11) / 2 ) ) * 5);
 					}
 					break;
 			}
@@ -19558,7 +19552,7 @@ bool skill_produce_mix(struct map_session_data *sd, uint16 skill_id, unsigned sh
 				if (skill_produce_db[idx].itemlv > 10 && skill_produce_db[idx].itemlv <= 20 ) { //Cooking items.
 					clif_specialeffect(&sd->bl, EF_COOKING_FAIL, AREA);
 					if (sd->cook_mastery > 0)
-						pc_setglobalreg(sd, add_str("COOK_MASTERY"), sd->cook_mastery - ( 1 << ((skill_produce_db[idx].itemlv - 11) / 2) ) - ( ( ( 1 << ((skill_produce_db[idx].itemlv - 11) / 2) ) >> 1 ) * 3 ));
+						pc_setglobalreg(sd, add_str(COOKMASTERY_VAR), sd->cook_mastery - ( 1 << ((skill_produce_db[idx].itemlv - 11) / 2) ) - ( ( ( 1 << ((skill_produce_db[idx].itemlv - 11) / 2) ) >> 1 ) * 3 ));
 				}
 				break;
 		}

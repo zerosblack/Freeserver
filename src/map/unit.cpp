@@ -1,4 +1,4 @@
-// Copyright (c) Athena Dev Teams - Licensed under GNU GPL
+// Copyright (c) rAthena Dev Teams - Licensed under GNU GPL
 // For more information, see LICENCE in the main folder
 
 #include "unit.hpp"
@@ -6,36 +6,36 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "../common/showmsg.hpp"
-#include "../common/timer.hpp"
-#include "../common/nullpo.hpp"
 #include "../common/db.hpp"
-#include "../common/malloc.hpp"
-#include "../common/random.hpp"
-#include "../common/socket.hpp"
 #include "../common/ers.hpp"  // ers_destroy
+#include "../common/malloc.hpp"
+#include "../common/nullpo.hpp"
+#include "../common/random.hpp"
+#include "../common/showmsg.hpp"
+#include "../common/socket.hpp"
+#include "../common/timer.hpp"
 
 #include "achievement.hpp"
+#include "battle.hpp"
+#include "battleground.hpp"
+#include "channel.hpp"
+#include "chat.hpp"
+#include "clif.hpp"
+#include "duel.hpp"
+#include "elemental.hpp"
+#include "guild.hpp"
+#include "homunculus.hpp"
+#include "intif.hpp"
 #include "map.hpp"
+#include "mercenary.hpp"
+#include "mob.hpp"
+#include "npc.hpp"
+#include "party.hpp"
 #include "path.hpp"
 #include "pc.hpp"
 #include "pet.hpp"
-#include "homunculus.hpp"
-#include "mercenary.hpp"
-#include "elemental.hpp"
-#include "channel.hpp"
-#include "duel.hpp"
-#include "battleground.hpp"
-#include "chat.hpp"
-#include "trade.hpp"
-#include "party.hpp"
-#include "intif.hpp"
 #include "storage.hpp"
-#include "guild.hpp"
-#include "npc.hpp"
-#include "clif.hpp"
-#include "mob.hpp"
-#include "battle.hpp"
+#include "trade.hpp"
 
 // Directions values
 // 1 0 7
@@ -1158,7 +1158,7 @@ enum e_unit_blown unit_blown_immune(struct block_list* bl, uint8 flag)
 		case BL_PC: {
 				struct map_session_data *sd = BL_CAST(BL_PC, bl);
 				// Basilica caster can't be knocked-back by normal monsters.
-				if( !(flag&0x4) && &sd->sc && sd->sc.data[SC_BASILICA] && sd->sc.data[SC_BASILICA]->val4 == sd->bl.id)
+				if( !(flag&0x4) && sd->sc.data[SC_BASILICA] && sd->sc.data[SC_BASILICA]->val4 == sd->bl.id)
 					return UB_TARGET_BASILICA;
 				// Target has special_state.no_knockback (equip)
 				if( (flag&(0x1|0x2)) && sd->special_state.no_knockback )

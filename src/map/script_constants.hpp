@@ -1,8 +1,8 @@
-// Copyright (c) Athena Dev Teams - Licensed under GNU GPL
+// Copyright (c) rAthena Dev Teams - Licensed under GNU GPL
 // For more information, see LICENCE in the main folder
 
 #ifndef _SCRIPT_CONSTANTS_HPP_
-	#define _SCRIPT_CONSTANTS_HPP_
+#define _SCRIPT_CONSTANTS_HPP_
 
 	#define export_constant(a) script_set_constant(#a,a,false,false)
 	#define export_constant2(a,b) script_set_constant(a,b,false,false)
@@ -514,6 +514,10 @@
 	export_parameter(ROULETTE_BRONZE_VAR,SP_ROULETTE_BRONZE);
 	export_parameter(ROULETTE_SILVER_VAR,SP_ROULETTE_SILVER);
 	export_parameter(ROULETTE_GOLD_VAR,SP_ROULETTE_GOLD);
+	export_parameter(CASHPOINT_VAR, SP_CASHPOINTS);
+	export_parameter(KAFRAPOINT_VAR, SP_KAFRAPOINTS);
+	export_parameter(PCDIECOUNTER_VAR, SP_PCDIECOUNTER);
+	export_parameter(COOKMASTERY_VAR, SP_COOKMASTERY);
 
 	export_constant2("bMaxHP",SP_MAXHP);
 	export_constant2("bMaxSP",SP_MAXSP);
@@ -1449,7 +1453,7 @@
 	export_constant(SC_SHRIMP);
 	export_constant(SC_FRESHSHRIMP);
 	export_constant(SC_ACTIVE_MONSTER_TRANSFORM);
-	export_constant(SC_CLOUD_KILL);
+	export_deprecated_constant(SC_CLOUD_KILL);
 	export_constant(SC_LJOSALFAR);
 	export_constant(SC_MERMAID_LONGING);
 	export_constant(SC_HAT_EFFECT);
@@ -6002,6 +6006,13 @@
 	export_constant_npc(JT_4_F_SE_SUN);
 	export_constant_npc(JT_4_M_SE_MOON);
 	export_constant_npc(JT_4_M_SE_STAR);
+	export_constant_npc(JT_4_EP17_KAYA);
+	export_constant_npc(JT_4_EP17_AS);
+	export_constant_npc(JT_4_EP17_ELYUMINA);
+	export_constant_npc(JT_4_EP17_MORNING);
+	export_constant_npc(JT_4_EP17_MIGUEL);
+	export_constant_npc(JT_4_EP17_NIHIL_K);
+	export_constant_npc(JT_4_EP17_MIGUEL_D);
 	#undef export_constant_npc
 
 	/* special effects */
@@ -7224,6 +7235,14 @@
 	export_constant(MD_DETECTOR);
 	export_constant(MD_STATUS_IMMUNE);
 	export_constant(MD_SKILL_IMMUNE);
+
+	/* guild storage flags */
+	export_constant(GSTORAGE_OPEN);
+	export_constant(GSTORAGE_STORAGE_ALREADY_OPEN);
+	export_constant(GSTORAGE_ALREADY_OPEN);
+	export_constant(GSTORAGE_NO_GUILD);
+	export_constant(GSTORAGE_NO_STORAGE);
+	export_constant(GSTORAGE_NO_PERMISSION);
 
 	#undef export_constant
 	#undef export_constant2

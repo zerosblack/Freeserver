@@ -1,4 +1,4 @@
-// Copyright (c) Athena Dev Teams - Licensed under GNU GPL
+// Copyright (c) rAthena Dev Teams - Licensed under GNU GPL
 // For more information, see LICENCE in the main folder
 
 #include "map.hpp"
@@ -7,47 +7,47 @@
 #include <math.h>
 
 #include "../common/cbasetypes.hpp"
+#include "../common/cli.hpp"
 #include "../common/core.hpp"
-#include "../common/timer.hpp"
+#include "../common/ers.hpp"
 #include "../common/grfio.hpp"
 #include "../common/malloc.hpp"
-#include "../common/socket.hpp" // WFIFO*()
-#include "../common/showmsg.hpp"
 #include "../common/nullpo.hpp"
 #include "../common/random.hpp"
+#include "../common/showmsg.hpp"
+#include "../common/socket.hpp" // WFIFO*()
 #include "../common/strlib.hpp"
+#include "../common/timer.hpp"
 #include "../common/utils.hpp"
-#include "../common/cli.hpp"
-#include "../common/ers.hpp"
 
-#include "path.hpp"
+#include "achievement.hpp"
+#include "atcommand.hpp"
+#include "battle.hpp"
+#include "battleground.hpp"
+#include "cashshop.hpp"
+#include "channel.hpp"
+#include "chat.hpp"
 #include "chrif.hpp"
 #include "clan.hpp"
 #include "clif.hpp"
 #include "duel.hpp"
-#include "intif.hpp"
-#include "npc.hpp"
-#include "pc.hpp"
-#include "chat.hpp"
-#include "storage.hpp"
-#include "trade.hpp"
-#include "party.hpp"
-#include "battleground.hpp"
-#include "quest.hpp"
-#include "mapreg.hpp"
-#include "pet.hpp"
+#include "elemental.hpp"
+#include "guild.hpp"
 #include "homunculus.hpp"
 #include "instance.hpp"
-#include "mercenary.hpp"
-#include "elemental.hpp"
-#include "cashshop.hpp"
-#include "channel.hpp"
-#include "achievement.hpp"
-#include "guild.hpp"
-#include "atcommand.hpp"
-#include "battle.hpp"
+#include "intif.hpp"
 #include "log.hpp"
+#include "mapreg.hpp"
+#include "mercenary.hpp"
 #include "mob.hpp"
+#include "npc.hpp"
+#include "party.hpp"
+#include "path.hpp"
+#include "pc.hpp"
+#include "pet.hpp"
+#include "quest.hpp"
+#include "storage.hpp"
+#include "trade.hpp"
 
 char default_codepage[32] = "";
 
@@ -3728,7 +3728,7 @@ static int char_ip_set = 0;
 int parse_console(const char* buf){
 	char type[64];
 	char command[64];
-	char mapname[64];
+	char mapname[MAP_NAME_LENGTH];
 	int16 x = 0;
 	int16 y = 0;
 	int n;
@@ -3737,7 +3737,7 @@ int parse_console(const char* buf){
 	memset(&sd, 0, sizeof(struct map_session_data));
 	strcpy(sd.status.name, "console");
 
-	if( ( n = sscanf(buf, "%63[^:]:%63[^:]:%63s %6hd %6hd[^\n]", type, command, mapname, &x, &y) ) < 5 ){
+	if( ( n = sscanf(buf, "%63[^:]:%63[^:]:%11s %6hd %6hd[^\n]", type, command, mapname, &x, &y) ) < 5 ){
 		if( ( n = sscanf(buf, "%63[^:]:%63[^\n]", type, command) ) < 2 )		{
 			if((n = sscanf(buf, "%63[^\n]", type))<1) return -1; //nothing to do no arg
 		}

@@ -1,4 +1,4 @@
-// Copyright (c) Athena Dev Teams - Licensed under GNU GPL
+// Copyright (c) rAthena Dev Teams - Licensed under GNU GPL
 // For more information, see LICENCE in the main folder
 
 #ifndef _NPC_HPP_
@@ -1096,6 +1096,13 @@ enum e_job_types
 	JT_4_F_SE_SUN,
 	JT_4_M_SE_MOON,
 	JT_4_M_SE_STAR,
+	JT_4_EP17_KAYA,
+	JT_4_EP17_AS,
+	JT_4_EP17_ELYUMINA,
+	JT_4_EP17_MORNING,
+	JT_4_EP17_MIGUEL,
+	JT_4_EP17_NIHIL_K,
+	JT_4_EP17_MIGUEL_D,
 	NPC_RANGE3_END, // Official: JT_NEW_NPC_3RD_END=19999
 
 	// Unofficial
