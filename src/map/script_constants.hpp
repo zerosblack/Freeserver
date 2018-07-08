@@ -5017,6 +5017,9 @@
 	export_constant(REFINE_COST_OVER10_HD);
 	export_constant(REFINE_COST_HOLINK);
 	export_constant(REFINE_COST_WAGJAK);
+	export_constant(REFINE_COST_BLESSED);
+	export_constant(REFINE_COST_EVT_ENRICHED);
+	export_constant(REFINE_COST_EVT_OVER10_HD);
 	export_constant(REFINE_COST_MAX);
 
 	/* refine information types */
