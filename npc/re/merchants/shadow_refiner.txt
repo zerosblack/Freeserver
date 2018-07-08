@@ -137,7 +137,7 @@
 		if (callfunc("F_IsEquipIDHack", .@part, .@equip_id) || callfunc("F_IsEquipCardHack", .@part, .@card[0], .@card[1], .@card[2], .@card[3]) || callfunc("F_IsEquipRefineHack", .@part, .@equip_refine))
 			close;
 
-		if (getequippercentrefinery(.@part, .@is_enriched) > rand(100)) {
+		if (getequippercentrefinery(.@part, .@option == 2) > rand(100)) {
 			successrefitem .@part;
 			mes "[Shadow Blacksmith]";
 			mes "It worked! It worked!";
