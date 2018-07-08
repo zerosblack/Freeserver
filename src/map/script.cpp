@@ -24044,6 +24044,38 @@ BUILDIN_FUNC(open_roulette){
 #endif
 }
 
+/*
+* getblacksmithblessing(<type>,<refine>{,<var>})
+* Return info Blacksmith Blessing in (specified) an array
+* .@refinebb[0] = Blacksmith Blessing ID
+* .@refinebb[1] = Amount
+*/
+BUILDIN_FUNC(getblacksmithblessing) {
+	struct refine_bs_blessing bb;
+	int type = script_getnum(st, 2);
+	int refine = script_getnum(st, 3);
+	struct script_data *data = script_hasdata(st, 4) ? script_getdata(st, 4) : NULL;
+	char *name;
+
+	memset(&bb, 0, sizeof(struct refine_bs_blessing));
+	if (!status_get_refine_blacksmithBlessing(&bb, (enum refine_type)type, refine)) {
+		script_pushint(st, 0);
+		return SCRIPT_CMD_FAILURE;
+	}
+
+	if (data && data_isreference(data)) {
+		name = reference_getname(data);
+		setd_sub(st, NULL, name, 0, (void *)__64BPRTSIZE((int)bb.nameid), data->ref);
+		setd_sub(st, NULL, name, 1, (void *)__64BPRTSIZE((int)bb.count), data->ref);
+	}
+	else {
+		setd_sub(st, NULL, ".@refinebb", 0, (void *)__64BPRTSIZE((int)bb.nameid), NULL);
+		setd_sub(st, NULL, ".@refinebb", 1, (void *)__64BPRTSIZE((int)bb.count), NULL);
+	}
+	script_pushint(st, (bb.nameid) ? 1 : 0);
+	return SCRIPT_CMD_SUCCESS;
+}
+
 BUILDIN_FUNC(refineui){
 #if PACKETVER < 20161012
 	ShowError( "buildin_refineui: This command requires packet version 2016-10-12 or newer.\n" );
@@ -24715,6 +24747,7 @@ struct script_function buildin_func[] = {
 
 	// Refine UI
 	BUILDIN_DEF(getequiprefinecost,"iii?"),
+	BUILDIN_DEF(getblacksmithblessing, "ii"),
 	BUILDIN_DEF(refineui,"?"),
 
 	BUILDIN_DEF2(round, "round", "i"),

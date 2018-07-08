@@ -68,17 +68,9 @@
 		mes "This item can't be refined.";
 		close;
 	}
-	switch( getequiprefinerycnt(.@part) ) {
-	case 7:
-		.@blacksmith_blessing_count = 1;
-		break;
-	case 8:
-		.@blacksmith_blessing_count = 2;
-		break;
-	case 9:
-		.@blacksmith_blessing_count = 4;
-		break;
-	default:
+	.@weapon_lvl = getequipweaponlv(.@part);
+	.@bb = getblacksmithblessing(.@weapon_lvl .@refine_count);
+	if (!.@bb) {
 		mes "[Blacksmith Mighty Hammer]";
 		mes "I only handle items with refine levels from +7 to +9.";
 		close;
@@ -105,7 +97,7 @@
 		mes "Well, even if it fails, it only decreases by 1 refine level.";
 		mes "Would you like to continue refining?";
 		next;
-		if (countitem(6635) < .@blacksmith_blessing_count)
+		if (countitem(.@refinebb[0]) < .@refinebb[1])
 			setarray .@menu$[1], "Yes", "Not yet";
 		else {
 			mes "[Blacksmith Mighty Hammer]";
@@ -113,11 +105,10 @@
 			mes "With the Blacksmith Blessing, the equipment won't vanish if the refine is failed!";
 			next;
 			mes "[Blacksmith Mighty Hammer]";
-			.@weapon_lvl = getequipweaponlv(.@part);
 			if (.@weapon_lvl < 1 || .@weapon_lvl > 4)
-				mes "For +" + getequiprefinerycnt(.@part) + " equipment, refine with^316AC5 " + .@blacksmith_blessing_count + " unit(s) Blacksmith Blessing^000000 can prevent the equipment to be vanished. Do you want use it to refine?";
+				mes "For +" + getequiprefinerycnt(.@part) + " equipment, refine with^316AC5 " + .@refinebb[1] + " unit(s) Blacksmith Blessing^000000 can prevent the equipment to be vanished. Do you want use it to refine?";
 			else
-				mes "For +" + getequiprefinerycnt(.@part) + " weapon, refine with^316AC5 " + .@blacksmith_blessing_count + " unit(s) Blacksmith Blessing^000000 can prevent the equipment to be vanished. Do you want use it to refine?";
+				mes "For +" + getequiprefinerycnt(.@part) + " weapon, refine with^316AC5 " + .@refinebb[1] + " unit(s) Blacksmith Blessing^000000 can prevent the equipment to be vanished. Do you want use it to refine?";
 			next;
 			setarray .@menu$[0], "Use it to refine", "Refine directly without it", "Don't refine yet";
 		}
@@ -133,13 +124,13 @@
 			close;
 		}
 	}
-	if ((.@bless_who && countitem(6635) < .@blacksmith_blessing_count) || countitem(.@material) == 0 || Zeny < .@price) {
+	if ((.@bless_who && countitem(.@refinebb[0]) < .@refinebb[1]) || countitem(.@material) == 0 || Zeny < .@price) {
 		mes "[Blacksmith Mighty Hammer]";
 		mes "Didn't you just say you had everything ready?";
 		close;
 	}
 	if (.@bless_who)
-		delitem 6635, .@blacksmith_blessing_count;
+		delitem .@refinebb[0],.@refinebb[1];
 	delitem .@material,1;
 	Zeny = Zeny - .@price;
 
@@ -256,11 +247,9 @@ lhz_in02,280,19,3	duplicate(MightyHammer)	Mighty Hammer#lhz	4_M_DWARF
 		mes "Haven't I told you? I only refine equipments that are +10 and above.";
 		close;
 	}
-	else if (.@refine_count == 10)
-		.@blacksmith_blessing_count = 7;
-	else if (.@refine_count == 11)
-		.@blacksmith_blessing_count = 11;
-	else if (.@refine_count == 20) {
+	.@weapon_lvl = getequipweaponlv(.@part);
+	.@bb = getblacksmithblessing(.@weapon_lvl .@refine_count);
+	if (!.@bb) {
 		mes "[Basta]";
 		mes "This weapon is perfect, no need to refine it anymore~";
 		close;
@@ -271,7 +260,6 @@ lhz_in02,280,19,3	duplicate(MightyHammer)	Mighty Hammer#lhz	4_M_DWARF
 	.@price = getequiprefinecost(.@part, REFINE_COST_OVER10_HD, REFINE_ZENY_COST);
 	.@material = getequiprefinecost(.@part, REFINE_COST_OVER10_HD, REFINE_MATERIAL_ID);
 
-	.@weapon_lvl = getequipweaponlv(.@part);
 	if (.@weapon_lvl < 1 || .@weapon_lvl > 4)
 		.@type$ = "armor";
 	else
@@ -296,7 +284,7 @@ lhz_in02,280,19,3	duplicate(MightyHammer)	Mighty Hammer#lhz	4_M_DWARF
 		mes "It is impossible that the refine level will drop by, say, 3 or 4... that sounds scary.";
 		mes "Here it can only decrease by 1 level.";
 		next;
-		if (.@blacksmith_blessing_count == 0 || countitem(6635) < .@blacksmith_blessing_count) {
+		if (.@refinebb[1] == 0 || countitem(.@refinebb[0]) < .@refinebb[1]) {
 			mes "[Basta]";
 			mes "Compared to other blacksmiths, the risk is smaller.";
 			mes "I've given all precautions. Do you want to try it?";
@@ -308,7 +296,7 @@ lhz_in02,280,19,3	duplicate(MightyHammer)	Mighty Hammer#lhz	4_M_DWARF
 			mes "Woh~ is it the ^316AC5Blacksmith Blessing^000000? It is difficult to get it~ But, you has get it!";
 			next;
 			mes "[Basta]";
-			mes "For +" + .@refine_count + " " + .@type$ + " need ^316AC5" + .@blacksmith_blessing_count + " unit(s) Blacksmith Blessing^000000 can prevent the equipment is vanished. Do you want to refine with Blacksmith Blessing?";
+			mes "For +" + .@refine_count + " " + .@type$ + " need ^316AC5" + .@refinebb[1] + " unit(s) Blacksmith Blessing^000000 can prevent the equipment is vanished. Do you want to refine with Blacksmith Blessing?";
 			next;
 			setarray .@menu$[0], "Refine with Blacksmith Blessing", "Refine without Blacksmith Blessing", "Don't refine yet";
 		}
@@ -325,14 +313,14 @@ lhz_in02,280,19,3	duplicate(MightyHammer)	Mighty Hammer#lhz	4_M_DWARF
 			close;
 		}
 	}
-	if ((.@bless_who && countitem(6635) < .@blacksmith_blessing_count) || countitem(.@material) == 0 || Zeny < .@price) {
+	if ((.@bless_who && countitem(.@refinebb[0]) < .@refinebb[1]) || countitem(.@material) == 0 || Zeny < .@price) {
 		mes "[Basta]";
 		mes "Hmm... You didn't bring all the materials needed.";
 		mes "Come back when you have them all.";
 		close;
 	}
 	if (.@bless_who)
-		delitem 6635, .@blacksmith_blessing_count;
+		delitem .@refinebb[0],.@refinebb[1];
 	delitem .@material,1;
 	Zeny = Zeny - .@price;
 
