@@ -69,7 +69,7 @@
 		close;
 	}
 	.@weapon_lvl = getequipweaponlv(.@part);
-	.@bb = getblacksmithblessing(.@weapon_lvl .@refine_count);
+	.@bb = getblacksmithblessing(.@weapon_lvl,.@refine_count);
 	if (!.@bb) {
 		mes "[Blacksmith Mighty Hammer]";
 		mes "I only handle items with refine levels from +7 to +9.";
@@ -248,7 +248,7 @@ lhz_in02,280,19,3	duplicate(MightyHammer)	Mighty Hammer#lhz	4_M_DWARF
 		close;
 	}
 	.@weapon_lvl = getequipweaponlv(.@part);
-	.@bb = getblacksmithblessing(.@weapon_lvl .@refine_count);
+	.@bb = getblacksmithblessing(.@weapon_lvl,.@refine_count);
 	if (!.@bb) {
 		mes "[Basta]";
 		mes "This weapon is perfect, no need to refine it anymore~";
