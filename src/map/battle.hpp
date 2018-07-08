@@ -636,14 +636,13 @@ struct Battle_Config
 	int guild_alliance_onlygm;
 	int feature_achievement;
 	int allow_bound_sell;
-	int event_refine_chance;
+	int feature_refineui;
 	int autoloot_adjust;
 	int broadcast_hide_name;
 	int skill_drop_items_full;
 	int feature_homunculus_autofeed;
 	int summoner_trait;
 	int homunculus_autofeed_always;
-	int feature_refineui;
 
 #include "../custom/battle_config_struct.inc"
 };
