@@ -53,9 +53,11 @@ Armor:
     - Type: REFINE_COST_HOLINK
       Price: 15000
       Material: 7619
+      RefineUI: false
     - Type: REFINE_COST_WAGJAK
       Price: 20000
       Material: 985
+      RefineUI: false
     - Type: REFINE_COST_BLESSED
       Price: 20000
       Material: 6439
@@ -319,9 +321,11 @@ WeaponLv1:
     - Type: REFINE_COST_HOLINK
       Price: 500
       Material: 7620
+      RefineUI: false
     - Type: REFINE_COST_WAGJAK
       Price: 1000
       Material: 1010
+      RefineUI: false
     - Type: REFINE_COST_BLESSED
       Price: 1000
       Material: 6438
@@ -578,9 +582,11 @@ WeaponLv2:
     - Type: REFINE_COST_HOLINK
       Price: 2000
       Material: 7620
+      RefineUI: false
     - Type: REFINE_COST_WAGJAK
       Price: 2000
       Material: 1011
+      RefineUI: false
     - Type: REFINE_COST_BLESSED
       Price: 2000
       Material: 6438
@@ -837,9 +843,11 @@ WeaponLv3:
     - Type: REFINE_COST_HOLINK
       Price: 20000
       Material: 7620
+      RefineUI: false
     - Type: REFINE_COST_WAGJAK
       Price: 10000
       Material: 984
+      RefineUI: false
     - Type: REFINE_COST_BLESSED
       Price: 20000
       Material: 6438
@@ -1096,9 +1104,11 @@ WeaponLv4:
     - Type: REFINE_COST_HOLINK
       Price: 50000
       Material: 7620
+      RefineUI: false
     - Type: REFINE_COST_WAGJAK
       Price: 20000
       Material: 984
+      RefineUI: false
     - Type: REFINE_COST_BLESSED
       Price: 40000
       Material: 6438
