@@ -14442,138 +14442,101 @@ static bool status_yaml_readdb_refine_sub(const YAML::Node &node, int refine_inf
 	if (refine_info_index < 0 || refine_info_index >= REFINE_TYPE_MAX)
 		return false;
 
-	int bonus_per_level = yaml_get_int(wrapper, "StatsPerLevel");
-	int random_bonus_start_level = yaml_get_int(wrapper, "RandomBonusStartLevel");
-	int random_bonus = yaml_get_int(wrapper, "RandomBonusValue");
-	struct s_refine_type {
-		char *str;
-		int id;
-	};
-	struct s_refine_type **refine_types = NULL;
-	uint8 refine_type_num = 0;
-	yamlwrapper* costs = yaml_get_subnode(wrapper, "Costs");
-	yamliterator* it = yaml_get_iterator(costs);
-	if (yaml_iterator_is_valid(it)) {
-		for (yamlwrapper* type = yaml_iterator_first(it); yaml_iterator_has_next(it); type = yaml_iterator_next(it)) {
-			int idx = 0, price;
-			unsigned short material;
-			static char* keys[] = { "Type", "Price", "Material" };
-			char* result;
+	int bonus_per_level = node["StatsPerLevel"].as<int>();
+	int random_bonus_start_level = node["RandomBonusStartLevel"].as<int>();
+	int random_bonus = node["RandomBonusValue"].as<int>();
+	const YAML::Node &costs = node["Costs"];
 
-			if ((result = yaml_verify_nodes(type, ARRAYLENGTH(keys), keys)) != NULL) {
-				ShowWarning("status_yaml_readdb_refine_sub: Invalid refine cost with undefined " CL_WHITE "%s" CL_RESET "in file" CL_WHITE "%s" CL_RESET ".\n", result, file_name);
-				yaml_destroy_wrapper(type);
-				continue;
-			}
+	for (const auto costit : costs) {
+		const YAML::Node &type = costit;
+		int idx = 0, price;
+		unsigned short material;
+		const std::string keys[] = { "Type", "Price", "Material" };
 
-			char* refine_cost_const = yaml_get_c_string(type, "Type");
-			if (!script_get_constant(refine_cost_const, &idx)) {
-				ShowError("status_yaml_readdb_refine_sub: Cost type '%s' is not defined. The type must be defined as script constants.\n", refine_cost_const);
-				continue;
-			}
-			price = yaml_get_int(type, "Price");
-			material = yaml_get_uint16(type, "Material");
+		for (int i = 0; i < ARRAYLENGTH(keys); i++) {
+			if (!type[keys[i]].IsDefined())
+				ShowWarning("status_yaml_readdb_refine_sub: Invalid refine cost with undefined " CL_WHITE "%s" CL_RESET "in file" CL_WHITE "%s" CL_RESET ".\n", keys[i].c_str(), file_name.c_str());
+		}
 
-			int len = strlen(refine_cost_const) + 1;
-			if (refine_types && refine_type_num) {
+		std::string refine_cost_const = type["Type"].as<std::string>();
+		if (ISDIGIT(refine_cost_const[0]))
+			idx = atoi(refine_cost_const.c_str());
+		else
+			script_get_constant(refine_cost_const.c_str(), &idx);
+		price = type["Price"].as<int>();
+		material = type["Material"].as<uint16>();
+
+		refine_info[refine_info_index].cost[idx].nameid = material;
+		refine_info[refine_info_index].cost[idx].zeny = price;
+		refine_info[refine_info_index].cost[idx].breakable = (type["Breakable"].IsDefined()) ? type["Breakable"].as<bool>() : true;
+		refine_info[refine_info_index].cost[idx].refineui = (type["RefineUI"].IsDefined()) ? type["RefineUI"].as<bool>() : true;
+	}
+
+	const YAML::Node &rates = node["Rates"];
+
+	for (const auto rateit : rates) {
+		const YAML::Node &level = rateit;
+		int refine_level = level["Level"].as<int>() - 1;
+
+		if (refine_level >= MAX_REFINE)
+			continue;
+
+		if (level["Chances"].IsDefined()) {
+			const YAML::Node &chances = level["Chances"];
+			for (const auto chanceit : chances) {
 				int i;
-				ARR_FIND(0, refine_type_num, i, strcmpi(refine_cost_const, refine_types[i]->str) == 0);
-				if (i < refine_type_num) {
-					ShowError("status_yaml_readdb_refine_sub: Redifinition of cost type '%s'\n", refine_cost_const);
+				const YAML::Node &chance = chanceit;
+				const std::string keys[] = { "Type", "Rate" };
+
+				for (i = 0; i < ARRAYLENGTH(keys); i++) {
+					if (!chance[keys[i]].IsDefined()) {
+						ShowWarning("status_yaml_readdb_refine_sub: Invalid Chances with undefined " CL_WHITE "%s" CL_RESET "in file" CL_WHITE "%s" CL_RESET ".\n", keys[i].c_str(), file_name.c_str());
+						break;
+					}
+				}
+				if (i != ARRAYLENGTH(keys)) {
+					ShowError("status_yaml_readdb_refine_sub: Skipping incomplete node for Chances list.\n");
 					continue;
 				}
-			}
-			RECREATE(refine_types, struct s_refine_type*, refine_type_num + 1);
-			CREATE(refine_types[refine_type_num], struct s_refine_type, 1);
-			CREATE(refine_types[refine_type_num]->str, char, len);
-			safestrncpy(refine_types[refine_type_num]->str, refine_cost_const, len);
-			refine_types[refine_type_num]->id = idx;
-			refine_type_num++;
 
-			refine_info[refine_info_index].cost[idx].nameid = material;
-			refine_info[refine_info_index].cost[idx].zeny = price;
-			if (yaml_node_is_defined(type, "Breakable")) {
-				refine_info[refine_info_index].cost[idx].breakable = yaml_get_boolean(type, "Breakable");
+				std::string chance_type = chance["Type"].as<std::string>();
+				int chance_idx = 0;
+				if (!script_get_constant(chance_type.c_str(), &chance_idx)) {
+					ShowWarning("status_yaml_readdb_refine_sub: Invalid Chance Type " CL_WHITE "%s" CL_RESET "in file" CL_WHITE "%s" CL_RESET ".\n", chance_type.c_str(), file_name.c_str());
+					continue;
+				}
+				refine_info[refine_info_index].chance[chance_idx][refine_level] = chance["Rate"].as<int>();
 			}
-			else {
-				refine_info[refine_info_index].cost[idx].breakable = true;
-			}
-			if (yaml_node_is_defined(type, "RefineUI")) {
-				refine_info[refine_info_index].cost[idx].refineui = yaml_get_boolean(type, "RefineUI");
-			}
-			else {
-				refine_info[refine_info_index].cost[idx].refineui = true;
-			}
-
-			aFree(refine_cost_const);
-			yaml_destroy_wrapper(type);
 		}
-	}
-	yaml_destroy_wrapper(costs);
-	yaml_iterator_destroy(it);
 
-	if (!refine_type_num || !refine_types) {
-		ShowError("status_yaml_readdb_refine_sub: No refine type defined.\n");
-		return false;
-	}
+		if (level["BlacksmithBlessing"].IsDefined()) {
+			int i = 0;
+			const YAML::Node &bb = level["BlacksmithBlessing"];
+			const std::string keys[] = { "ItemID", "Count" };
 
-	yamlwrapper* rates = yaml_get_subnode(wrapper, "Rates");
-	it = yaml_get_iterator(rates);
-
-	if (yaml_iterator_is_valid(it)) {
-		for (yamlwrapper* level = yaml_iterator_first(it); yaml_iterator_has_next(it); level = yaml_iterator_next(it)) {
-			int refine_level = yaml_get_int(level, "Level") - 1;
-
-			if (refine_level >= MAX_REFINE) {
-				yaml_destroy_wrapper(level);
+			for (i = 0; i < ARRAYLENGTH(keys); i++) {
+				if (!bb[keys[i]].IsDefined()) {
+					ShowWarning("status_yaml_readdb_refine_sub: Invalid BlacksmithBlessing with undefined " CL_WHITE "%s" CL_RESET "in file" CL_WHITE "%s" CL_RESET ".\n", keys[i].c_str(), file_name.c_str());
+					break;
+				}
+			}
+			if (i != ARRAYLENGTH(keys)) {
+				ShowError("status_yaml_readdb_refine_sub: Skipping incomplete node for BlacksmithBlessing list.\n");
 				continue;
 			}
-
-			if (yaml_node_is_defined(level, "Bonus"))
-				refine_info[refine_info_index].bonus[refine_level] = yaml_get_int(level, "Bonus");
-
-			for (int i = 0; i < refine_type_num; i++) {
-				if (yaml_node_is_defined(level, refine_types[i]->str)) {
-					refine_info[refine_info_index].chance[refine_types[i]->id][refine_level] = yaml_get_int(level, refine_types[i]->str);
-				}
-			}
-
-			if (refine_level >= random_bonus_start_level - 1)
-				refine_info[refine_info_index].randombonus_max[refine_level] = random_bonus * (refine_level - random_bonus_start_level + 2);
-
-			// Blacksmith Blessing
-			if (yaml_node_is_defined(level, "BlacksmithBlessing")) {
-				yamlwrapper* bswrap = yaml_get_subnode(level, "BlacksmithBlessing");
-				static char* keys[] = { "ItemID", "Count" };
-				char* result;
-
-				if ((result = yaml_verify_nodes(bswrap, ARRAYLENGTH(keys), keys)) != NULL) {
-					ShowWarning("status_yaml_readdb_refine_sub: Invalid refine cost with undefined " CL_WHITE "%s" CL_RESET "in file" CL_WHITE "%s" CL_RESET ".\n", result, file_name);
-					yaml_destroy_wrapper(bswrap);
-				}
-				else {
-					refine_info[refine_info_index].bs_blessing[refine_level].nameid = yaml_get_int(bswrap, "ItemID");
-					refine_info[refine_info_index].bs_blessing[refine_level].count = yaml_get_uint16(bswrap, "Count");
-					yaml_destroy_wrapper(bswrap);
-				}
-			}
-
-			yaml_destroy_wrapper(level);
+			refine_info[refine_info_index].bs_blessing[refine_level].nameid = bb["ItemID"].as<uint16>();
+			refine_info[refine_info_index].bs_blessing[refine_level].count = bb["Count"].as<uint16>();
 		}
-		for (int refine_level = 0; refine_level < MAX_REFINE; ++refine_level) {
-			refine_info[refine_info_index].bonus[refine_level] += bonus_per_level + (refine_level > 0 ? refine_info[refine_info_index].bonus[refine_level - 1] : 0);
-		}
+
+		if (level["Bonus"].IsDefined())
+			refine_info[refine_info_index].bonus[refine_level] = level["Bonus"].as<int>();
+
+		if (refine_level >= random_bonus_start_level - 1)
+			refine_info[refine_info_index].randombonus_max[refine_level] = random_bonus * (refine_level - random_bonus_start_level + 2);
 	}
-	yaml_destroy_wrapper(rates);
-	yaml_iterator_destroy(it);
-	for (uint8 i = 0; i < refine_type_num; i++) {
-		if (refine_types[i] && refine_types[i]->str) {
-			aFree(refine_types[i]->str);
-		}
-		aFree(refine_types[i]);
-	}
-	if (refine_types)
-		aFree(refine_types);
+	for (int refine_level = 0; refine_level < MAX_REFINE; ++refine_level)
+		refine_info[refine_info_index].bonus[refine_level] += bonus_per_level + (refine_level > 0 ? refine_info[refine_info_index].bonus[refine_level - 1] : 0);
+
 	return true;
 }
 
