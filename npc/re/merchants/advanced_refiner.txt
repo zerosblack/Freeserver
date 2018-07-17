@@ -159,7 +159,7 @@ malangdo,221,174,6	script	Holink#mal_cash	559,{
 		close;
 	}
 
-	if (getequippercentrefinery(.@part, REFINE_COST_HOLINK) > rand(100)) {
+	if (getequippercentrefinery(.@part, REFINE_COST_ENRICHED) > rand(100)) {
 		successrefitem .@part;
 		mes "[Holink]";
 		mes "Me~ Me~ Meow! Fun fun refining~";
