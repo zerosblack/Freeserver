@@ -3535,8 +3535,8 @@ int status_calc_pc_sub(struct map_session_data* sd, enum e_status_calc_opt opt)
 			struct weapon_data *wd;
 			struct weapon_atk *wa;
 
-			if(wlv >= REFINE_TYPE_MAX)
-				wlv = REFINE_TYPE_MAX - 1;
+			if(wlv >= REFINE_TYPE_WEAPON4)
+				wlv = REFINE_TYPE_WEAPON4 - 1;
 			if(i == EQI_HAND_L && sd->inventory.u.items_inventory[index].equip == EQP_HAND_L) {
 				wd = &sd->left_weapon; // Left-hand weapon
 				wa = &base_status->lhw;
@@ -3546,15 +3546,15 @@ int status_calc_pc_sub(struct map_session_data* sd, enum e_status_calc_opt opt)
 			}
 			wa->atk += sd->inventory_data[index]->atk;
 			if(r)
-				wa->atk2 = refine_info[wlv].bonus[r-1] / 100;
+				wa->atk2 = refine_info[sd->inventory_data[index]->refine_type].bonus[r-1] / 100;
 #ifdef RENEWAL
 			wa->matk += sd->inventory_data[index]->matk;
 			wa->wlv = wlv;
 			if(r && sd->weapontype1 != W_BOW) // Renewal magic attack refine bonus
-				wa->matk += refine_info[wlv].bonus[r-1] / 100;
+				wa->matk += refine_info[sd->inventory_data[index]->refine_type].bonus[r-1] / 100;
 #endif
 			if(r) // Overrefine bonus.
-				wd->overrefine = refine_info[wlv].randombonus_max[r-1] / 100;
+				wd->overrefine = refine_info[sd->inventory_data[index]->refine_type].randombonus_max[r-1] / 100;
 			wa->range += sd->inventory_data[index]->range;
 			if(sd->inventory_data[index]->script && (pc_has_permission(sd,PC_PERM_USE_ALL_EQUIPMENT) || !itemdb_isNoEquip(sd->inventory_data[index],sd->bl.m))) {
 				if (wd == &sd->left_weapon) {
@@ -3582,7 +3582,7 @@ int status_calc_pc_sub(struct map_session_data* sd, enum e_status_calc_opt opt)
 			int r;
 
 			if ( (r = sd->inventory.u.items_inventory[index].refine) )
-				refinedef += refine_info[REFINE_TYPE_ARMOR].bonus[r-1];
+				refinedef += refine_info[sd->inventory_data[index]->refine_type].bonus[r-1];
 			if(sd->inventory_data[index]->script && (pc_has_permission(sd,PC_PERM_USE_ALL_EQUIPMENT) || !itemdb_isNoEquip(sd->inventory_data[index],sd->bl.m))) {
 				if( i == EQI_HAND_L ) // Shield
 					sd->state.lr_flag = 3;
@@ -14316,7 +14316,7 @@ static TIMER_FUNC(status_natural_heal_timer){
  * @param type: refine type for cost & rate
  * @return The chance to refine the item, in percent (0~100)
  */
-int status_get_refine_chance(enum refine_type wlv, int refine, enum refine_cost_type type)
+int status_get_refine_chance(enum refine_type refine_type, int refine, enum refine_cost_type type)
 {
 	if (refine < 0 || refine >= MAX_REFINE)
 		return 0;
@@ -14324,7 +14324,7 @@ int status_get_refine_chance(enum refine_type wlv, int refine, enum refine_cost_
 	if (type < REFINE_COST_NORMAL || type >= REFINE_COST_MAX)
 		return 0;
 
-	return refine_info[wlv].chance[type][refine];
+	return refine_info[refine_type].chance[type][refine];
 }
 
 /**
@@ -14339,7 +14339,7 @@ bool status_get_refine_blacksmithBlessing(struct refine_bs_blessing* bs, enum re
 	if (refine < 0 || refine >= MAX_REFINE)
 		return false;
 
-	if (type < REFINE_TYPE_ARMOR || type > REFINE_TYPE_SHADOW)
+	if (type < REFINE_TYPE_ARMOR || type >= REFINE_TYPE_MAX)
 		return false;
 
 	memcpy(bs, &refine_info[type].bs_blessing[refine], sizeof(struct refine_bs_blessing));
@@ -14454,7 +14454,7 @@ static bool status_readdb_sizefix(char* fields[], int columns, int current)
  * @param file_name: File name for displaying only
  * @return True on success or false on failure
  */
-static bool status_yaml_readdb_refine_sub(const YAML::Node &node, int refine_info_index, const std::string &file_name) {
+static bool status_yaml_readdb_refine_sub(const YAML::Node &node, enum refine_type refine_info_index, const std::string &file_name) {
 	if (refine_info_index < 0 || refine_info_index >= REFINE_TYPE_MAX)
 		return false;
 
@@ -14573,7 +14573,18 @@ static bool status_yaml_readdb_refine_sub(const YAML::Node &node, int refine_inf
  */
 static void status_yaml_readdb_refine(const std::string &directory, const std::string &file) {
 	int count = 0;
-	const std::string labels[] = { "Armor", "WeaponLv1", "WeaponLv2", "WeaponLv3", "WeaponLv4", "Shadow" };
+	struct s_labels {
+		enum refine_type type;
+		const std::string label;
+	} labels[] = {
+		{ REFINE_TYPE_ARMOR, "Armor"},
+		{ REFINE_TYPE_WEAPON1, "WeaponLv1" },
+		{ REFINE_TYPE_WEAPON2, "WeaponLv2" },
+		{ REFINE_TYPE_WEAPON3, "WeaponLv3" },
+		{ REFINE_TYPE_WEAPON4, "WeaponLv4" },
+		{ REFINE_TYPE_SHADOW, "Shadow" },
+		{ REFINE_TYPE_COSTUME, "Costume" },
+	};
 	const std::string current_file = directory + "/" + file;
 	YAML::Node config;
 
@@ -14586,9 +14597,9 @@ static void status_yaml_readdb_refine(const std::string &directory, const std::s
 	}
 
 	for (int i = 0; i < ARRAYLENGTH(labels); i++) {
-		const YAML::Node &node = config[labels[i]];
+		const YAML::Node &node = config[labels[i].label];
 
-		if (node.IsDefined() && status_yaml_readdb_refine_sub(node, i, current_file))
+		if (node.IsDefined() && status_yaml_readdb_refine_sub(node, labels[i].type, current_file))
 			count++;
 	}
 	ShowStatus("Done reading '" CL_WHITE "%d" CL_RESET "' entries in '" CL_WHITE "%s" CL_RESET "'.\n", count, current_file.c_str());
@@ -14596,30 +14607,30 @@ static void status_yaml_readdb_refine(const std::string &directory, const std::s
 
 /**
  * Returns refine cost (zeny or item) for a weapon level.
- * @param weapon_lv Weapon level
+ * @param refine_type Refine type see enum refine_type
  * @param type Refine type (can be retrieved from refine_cost_type enum)
  * @param what true = returns zeny, false = returns item id
  * @return Refine cost for a weapon level
  */
-int status_get_refine_cost(int weapon_lv, int type, enum refine_info_type what) {
+int status_get_refine_cost(enum refine_type refine_type, int type, enum refine_info_type what) {
 	switch( what ){
 		case REFINE_MATERIAL_ID:
-			return refine_info[weapon_lv].cost[type].nameid;
+			return refine_info[refine_type].cost[type].nameid;
 		case REFINE_ZENY_COST:
-			return refine_info[weapon_lv].cost[type].zeny;
+			return refine_info[refine_type].cost[type].zeny;
 		case REFINE_REFINEUI_ENABLED:
-			return refine_info[weapon_lv].cost[type].refineui;
+			return refine_info[refine_type].cost[type].refineui;
 	}
 
 	return 0;
 }
 
-struct refine_cost *status_get_refine_cost_(int weapon_lv, int type) {
-	if (weapon_lv < REFINE_TYPE_ARMOR || weapon_lv >= REFINE_TYPE_MAX)
+struct refine_cost *status_get_refine_cost_(enum refine_type refine_type, int type) {
+	if (refine_type < REFINE_TYPE_ARMOR || refine_type >= REFINE_TYPE_MAX)
 		return NULL;
 	if (type < REFINE_COST_NORMAL || type >= REFINE_COST_MAX)
 		return NULL;
-	return &refine_info[weapon_lv].cost[type];
+	return &refine_info[refine_type].cost[type];
 }
 
 /**

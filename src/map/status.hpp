@@ -35,7 +35,8 @@ enum refine_type {
 	REFINE_TYPE_WEAPON3	= 3,
 	REFINE_TYPE_WEAPON4	= 4,
 	REFINE_TYPE_SHADOW	= 5,
-	REFINE_TYPE_MAX		= 6
+	REFINE_TYPE_COSTUME = 6,
+	REFINE_TYPE_MAX
 };
 
 /// Refine cost & chance type
@@ -74,10 +75,10 @@ struct refine_bs_blessing {
 };
 
 /// Get refine chance
-int status_get_refine_chance(enum refine_type wlv, int refine, enum refine_cost_type type);
-int status_get_refine_cost(int weapon_lv, int type, enum refine_info_type what);
+int status_get_refine_chance(enum refine_type refine_type, int refine, enum refine_cost_type type);
+int status_get_refine_cost(enum refine_type refine_type, int type, enum refine_info_type what);
 bool status_get_refine_blacksmithBlessing(struct refine_bs_blessing* bs, enum refine_type type, int refine);
-struct refine_cost *status_get_refine_cost_(int weapon_lv, int type);
+struct refine_cost *status_get_refine_cost_(enum refine_type refine_type, int type);
 
 /// Status changes listing. These code are for use by the server.
 enum sc_type : int16 {

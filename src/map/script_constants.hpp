@@ -7258,6 +7258,14 @@
 	export_constant(MD_STATUS_IMMUNE);
 	export_constant(MD_SKILL_IMMUNE);
 
+	export_constant(REFINE_TYPE_ARMOR);
+	export_constant(REFINE_TYPE_WEAPON1);
+	export_constant(REFINE_TYPE_WEAPON2);
+	export_constant(REFINE_TYPE_WEAPON3);
+	export_constant(REFINE_TYPE_WEAPON4);
+	export_constant(REFINE_TYPE_SHADOW);
+	export_constant(REFINE_TYPE_COSTUME);
+
 	/* guild storage flags */
 	export_constant(GSTORAGE_OPEN);
 	export_constant(GSTORAGE_STORAGE_ALREADY_OPEN);

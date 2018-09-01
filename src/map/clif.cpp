@@ -20551,13 +20551,13 @@ static inline bool clif_refineui_materials_sub( struct item *item, struct item_d
 		return false;
 	}
 
-	struct refine_cost *cost = status_get_refine_cost_(id->wlv, type);
+	struct refine_cost *cost = status_get_refine_cost_((enum refine_type)id->refine_type, type);
 	if (!cost || !cost->refineui)
 		return false;
 	memcpy(&materials[index].cost, cost, sizeof(struct refine_cost));
 
 	// Get the chance for refining the item with this material
-	materials[index].chance = status_get_refine_chance( (enum refine_type)id->wlv, item->refine, type);
+	materials[index].chance = status_get_refine_chance((enum refine_type)id->refine_type, item->refine, type);
 
 	// Either of the values was not set
 	if( materials[index].cost.nameid == 0 || materials[index].cost.zeny == 0 || materials[index].chance == 0 ){
@@ -20629,18 +20629,13 @@ void clif_refineui_info( struct map_session_data* sd, uint16 index ){
 	id = sd->inventory_data[index];
 
 	// No item data was found
-	if( id == NULL ){
+	if( id == NULL || id->refine_type == REFINE_TYPE_MAX){
 		return;
 	}
 
 	// Check if the item can be refined
 	if( id->flag.no_refine ){
 		clif_refineui_notrefineable(sd, index);
-		return;
-	}
-
-	// Only weapons and armors can be refined in the refine UI
-	if( id->type != IT_WEAPON && id->type != IT_ARMOR ){
 		return;
 	}
 
@@ -20748,17 +20743,12 @@ void clif_parse_refineui_refine( int fd, struct map_session_data* sd ){
 	id = sd->inventory_data[index];
 
 	// No item data was found
-	if( id == NULL ){
+	if( id == NULL || id->refine_type == REFINE_TYPE_MAX){
 		return;
 	}
 
 	// Check if the item can be refined
 	if( id->flag.no_refine ){
-		return;
-	}
-
-	// Only weapons and armors can be refined in the refine UI
-	if( id->type != IT_WEAPON && id->type != IT_ARMOR ){
 		return;
 	}
 

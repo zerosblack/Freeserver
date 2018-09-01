@@ -2837,10 +2837,6 @@ Valid information types are:
 
 REFINE_ZENY_COST       - Zeny
 REFINE_MATERIAL_ID     - Material Item ID
-REFINE_BREAKABLE       - If the equipment will be broken by using this material
-                         on a failed atempt
-REFINE_BS_BLESSING     - Only for REFINE_COST_BS_BLESSING to return the number of
-                         Blacksmith Blessing needed
 
 This function will return -1 on failure. The function fails if the cost type
 is invalid or if there is no item in the equipment slot.
@@ -2854,6 +2850,15 @@ Get info about 'Blacksmith Blessing' item used for specified <type> and
 
     .@refinebb[0] = Item ID acknowledged as Blacksmith Blessing
     .@refinebb[1] = Amount needed
+
+<type> is can be 0 for armor type, 1-4 for weapons level 1 to 4 or
+	REFINE_TYPE_ARMOR    = Armor
+	REFINE_TYPE_WEAPON1  = Weapon Lv 1
+	REFINE_TYPE_WEAPON2  = Weapon Lv 2
+	REFINE_TYPE_WEAPON3  = Weapon Lv 3
+	REFINE_TYPE_WEAPON4  = Weapon Lv 4
+	REFINE_TYPE_SHADOW   = Shadowgear
+	REFINE_TYPE_COSTUME  = Costume
 
 If <var> is specified, it will replaces .@refinebb as default array. This
 script also returns 1 on success and 0 on failure or no info.

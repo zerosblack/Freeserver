@@ -8858,10 +8858,7 @@ BUILDIN_FUNC(getequippercentrefinery)
 	if (equip_index_check(num))
 		i = pc_checkequip(sd,equip_bitmask[num]);
 	if (i >= 0 && sd->inventory.u.items_inventory[i].nameid && sd->inventory.u.items_inventory[i].refine < MAX_REFINE) {
-		enum refine_type type = REFINE_TYPE_SHADOW;
-		if (sd->inventory_data[i]->type != IT_SHADOWGEAR)
-			type = (enum refine_type)sd->inventory_data[i]->wlv;
-		script_pushint(st, status_get_refine_chance(type, (int)sd->inventory.u.items_inventory[i].refine, cost_type));
+		script_pushint(st, status_get_refine_chance((enum refine_type)sd->inventory_data[i]->refine_type, (int)sd->inventory.u.items_inventory[i].refine, cost_type));
 	}
 	else
 		script_pushint(st,0);
@@ -23460,15 +23457,7 @@ BUILDIN_FUNC(getequiprefinecost) {
 		return SCRIPT_CMD_SUCCESS;
 	}
 
-	int weapon_lv = sd->inventory_data[i]->wlv;
-	if (sd->inventory_data[i]->type == IT_SHADOWGEAR) {
-		if (sd->inventory_data[i]->equip == EQP_SHADOW_WEAPON)
-			weapon_lv = REFINE_TYPE_WEAPON4;
-		else
-			weapon_lv = REFINE_TYPE_SHADOW;
-	}
-
-	script_pushint(st, status_get_refine_cost(weapon_lv, type, (enum refine_info_type)info));
+	script_pushint(st, status_get_refine_cost((enum refine_type)sd->inventory_data[i]->refine_type, type, (enum refine_info_type)info));
 
 	return SCRIPT_CMD_SUCCESS;
 }
