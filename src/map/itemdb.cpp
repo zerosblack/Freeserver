@@ -1253,7 +1253,7 @@ static inline uint8 itemdb_set_refine_type(int type, int wlv, int loc) {
 	if (type == IT_ARMOR)
 		return (loc&EQP_COSTUME) ? REFINE_TYPE_COSTUME : REFINE_TYPE_ARMOR;
 	if (type == IT_SHADOWGEAR)
-		return REFINE_TYPE_SHADOW;
+		return (loc == EQP_SHADOW_WEAPON) ? REFINE_TYPE_SHADOW_WEAPON : REFINE_TYPE_SHADOW;
 	return REFINE_TYPE_MAX;
 }
 

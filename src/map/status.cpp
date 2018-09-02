@@ -14583,6 +14583,7 @@ static void status_yaml_readdb_refine(const std::string &directory, const std::s
 		{ REFINE_TYPE_WEAPON3, "WeaponLv3" },
 		{ REFINE_TYPE_WEAPON4, "WeaponLv4" },
 		{ REFINE_TYPE_SHADOW, "Shadow" },
+		{ REFINE_TYPE_SHADOW_WEAPON, "ShadowWeapon" },
 		{ REFINE_TYPE_COSTUME, "Costume" },
 	};
 	const std::string current_file = directory + "/" + file;
