@@ -8756,10 +8756,10 @@ int status_change_start(struct block_list* src, struct block_list* bl,enum sc_ty
 		if (sc->data[SC_QUAGMIRE] || sc->data[SC_DECREASEAGI])
 			return 0;
 	break;
-	case SC_MAGNIFICAT:
+	/*case SC_MAGNIFICAT:
 		if( sc->option&OPTION_MADOGEAR ) // Mado is immune to magnificat
 			return 0;
-		break;
+		break;*/
 	case SC_ONEHAND:
 	case SC_MERC_QUICKEN:
 	case SC_TWOHANDQUICKEN:
@@ -8771,8 +8771,8 @@ int status_change_start(struct block_list* src, struct block_list* bl,enum sc_ty
 	case SC_TRUESIGHT:
 	case SC_WINDWALK:
 	case SC_ASSNCROS:
-		if (sc->option&OPTION_MADOGEAR)
-			return 0; // Mado is immune to the above [Ind]
+		/*if (sc->option&OPTION_MADOGEAR)
+			return 0; // Mado is immune to the above [Ind]*/
 	case SC_CARTBOOST:
 		if (sc->data[SC_QUAGMIRE])
 			return 0;
