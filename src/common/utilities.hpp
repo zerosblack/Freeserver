@@ -8,6 +8,7 @@
 #include <memory>
 #include <string>
 #include <unordered_map>
+#include <vector>
 
 #include "cbasetypes.hpp"
 
@@ -119,6 +120,18 @@ namespace rathena {
 				return it->second;
 			else
 				return defaultValue;
+		}
+
+		/**
+		 * Erase an index value from a vector
+		 * @param vector: Vector to erase value from
+		 * @param index: Index value to remove
+		 */
+		template <typename K> void erase_at(std::vector<K>& vector, size_t index) {
+			if (vector.size() == 1)
+				vector.clear();
+			else
+				vector.erase(vector.begin() + index);
 		}
 	}
 }

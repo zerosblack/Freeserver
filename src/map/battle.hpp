@@ -664,17 +664,7 @@ struct Battle_Config
 	int homunculus_autofeed_always;
 	int feature_attendance;
 	int feature_privateairship;
-	int rental_transaction;
-	int min_shop_buy;
-	int min_shop_sell;
-	int feature_equipswitch;
-	int pet_walk_speed;
-	int homunculus_exp_gain;
-	int blocking_play_delay;
-	int instance_block_leave;
-	int instance_block_leaderchange;
-	int instance_block_invite;
-	int instance_block_expulsion;
+
 	/**
 	* Extended Vending system [Lilith]
 	**/
@@ -685,6 +675,13 @@ struct Battle_Config
 	int ex_vending_report;
 	int item_zeny;
 	int item_cash;
+
+	int rental_transaction;
+	int min_shop_buy;
+	int min_shop_sell;
+	int feature_equipswitch;
+	int pet_walk_speed;
+	int feature_bgqueue;
 
 #include "../custom/battle_config_struct.inc"
 };
