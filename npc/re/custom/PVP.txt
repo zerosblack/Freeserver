@@ -1,0 +1,19 @@
+prontera,167,198,6	script	PVP Staff	468,{
+	mes .@heading$;
+	mes "สวัสดี ท่านต้องการเข้าห้อง ^ff0000PVP^000000 หรือไม่";
+	next;
+	switch(select("ข้าจะเข้าไป:ไม่เอาอ่ะ")) {
+	next;
+
+case 1:
+	mes .@heading$;
+	mes "ไปลุยกันเลย!!";
+	warp "guild_vs3",0,0;
+	end;
+	
+case 2:
+	mes .@heading$;
+	mes "แล้วแต่นะ";
+}
+close;
+}

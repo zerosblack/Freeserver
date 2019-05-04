@@ -1,0 +1,12 @@
+prontera,155,192,5	script	กฏ ระเบียบ เซิฟเวอร์	857,{
+	mes "1. ห้ามใช้โปรแกรมช่วยเล่น บอท มาโคร";
+	mes "2. ห้ามใช้คำหยาบในการด่าทอผู้อื่น ให้เกิดบรรยากาศแง่ลบ";
+	mes "**การกระทำใดๆ ที่ GM เห็นว่าไม่สมควร GM มีสิทธิ์ลงโทษโดยไม่ต้องแจ้งล่วงหน้า";
+	mes "**หากพบว่ากระทำความผิดตามข้อ 1,2 จะทำการแบน ID นั้นๆถาวรทันที";
+	close; }
+	
+bossnia_01	mapflag	noexp
+bossnia_02	mapflag	noexp
+bossnia_03	mapflag	noexp
+bossnia_04	mapflag	noexp
+prontera	mapflag	noexp

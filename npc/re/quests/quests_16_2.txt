@@ -16,7 +16,7 @@
 prt_cas_q,29,28,0	script	#ep162_evt_npc_con	HIDDEN_WARP_NPC,2,2,{
 	end;
 OnTouch:
-	if (banquet_main_quest < 18)	// pre-req : access to room of consciousness (first time)
+	if (banquet_main_quest < 26)	// pre-req : access to room of consciousness (first time)
 		end;
 	if (terra_gloria_main == 0) {
 		classchange( 4_EP16_NIHIL, "Nihil M. Heine#ep162_01", bc_self );
@@ -41,7 +41,7 @@ prt_cas_q,23,33,2	duplicate(dummy_npc)	Crux#ep162_03	HIDDEN_WARP_NPC				// 4_EP1
 prt_cas_q,23,32,3	duplicate(dummy_npc)	Kronecker G. Heine#ep162	HIDDEN_WARP_NPC		// 4_EP16_GRANZ
 
 prt_cas_q,21,39,3	script	Nihil M. Heine#ep162_01	HIDDEN_WARP_NPC,{		// 4_EP16_NIHIL
-	if (banquet_main_quest < 18)	// pre-req : access to room of consciousness (first time)
+	if (banquet_main_quest < 26)	// pre-req : access to room of consciousness (first time)
 		end;
 	if (terra_gloria_main == 0) {
 		cutin "ep16_nihi_miseria_heine02.bmp",2;
@@ -342,7 +342,7 @@ prt_cas_q,21,39,3	script	Nihil M. Heine#ep162_01	HIDDEN_WARP_NPC,{		// 4_EP16_NI
 }
 
 prt_cas_q,23,36,3	script	Spica Nerius#ep162_01	HIDDEN_WARP_NPC,{		// 4_EP16_SPICA
-	if (banquet_main_quest < 18)
+	if (banquet_main_quest < 26)
 		end;
 	if (terra_gloria_main == 1) {
 		cutin "ep16_spica_nerius01.bmp",1;
@@ -10464,10 +10464,10 @@ rebel_in,90,40,5	script	Hogar#pa0829	4_M_MASKMAN,{
 		mes "Listen. I won't say it twice.";
 		next;
 		mes "[Hogar]";
-		mes "I take 20 Schwartz Honor Token to upgrade the slot of an Agenda Robe or Consultation Robe. The maximum slots for the upgrade are two. And I will take 10 Schwartz Honor Token for initialization. Do you understand?";
+		mes "I take 10 Schwartz Honor Token to upgrade the slot of an Agenda Robe or Consultation Robe. The maximum slots for the upgrade are two. And I will take 5 Schwartz Honor Token for initialization. Do you understand?";
 		next;
 		mes "[Hogar]";
-		mes "Then it's Mercenary Ring type A and B. I take five tokens for upgrading a slot. The maximum slots for the upgrade are two. And I will take 10 tokens for initialization.";
+		mes "Then it's Mercenary Ring type A and B. I take five tokens for upgrading a slot. The maximum slots for the upgrade are two. And I will take 5 tokens for initialization.";
 		next;
 		mes "[Hogar]";
 		mes "The initialization cannot be conducted at any time. I will only do it after you are granted two effects and cannot upgrade the gear any more. And ... then ...";
@@ -10480,7 +10480,7 @@ rebel_in,90,40,5	script	Hogar#pa0829	4_M_MASKMAN,{
 		close;
 	case 2:
 		mes "[Hogar]";
-		mes "For the Consultation Robe and Agenda Robe, you need 20 Schwartz Honor Tokens for each slot. Are you sure you want to upgrade it?";
+		mes "For the Consultation Robe and Agenda Robe, you need 10 Schwartz Honor Tokens for each slot. Are you sure you want to upgrade it?";
 		next;
 		if (select( "No", "Let's do it" ) == 1) {
 			mes "[Hogar]";
@@ -10513,7 +10513,7 @@ rebel_in,90,40,5	script	Hogar#pa0829	4_M_MASKMAN,{
 			mes "No more upgrade is possible on this gear. Do you have anything else?";
 			close;
 		}
-		if (countitem(25155) < 20) {
+		if (countitem(25155) < 10) {
 			mes "[Hogar]";
 			mes "Listen, fellow. If you don't have any " + getitemname(25155) + ", you cannot trade with me.";
 			close;
@@ -10546,7 +10546,7 @@ rebel_in,90,40,5	script	Hogar#pa0829	4_M_MASKMAN,{
 		else if (.@card[2] == 0)
 			.@card[2] = .@enhance[ rand(.@size) ];
 
-		delitem 25155,20;
+		delitem 25155,10;
 		delequip EQI_ARMOR;
 		getitem2 .@equip_id,1,1,.@refine,0,.@card[0],.@card[1],.@card[2],.@card[3];
 		specialeffect2 EF_REPAIRWEAPON;
@@ -10623,7 +10623,7 @@ rebel_in,90,40,5	script	Hogar#pa0829	4_M_MASKMAN,{
 		close;
 	case 4:
 		mes "[Hogar]";
-		mes "To initialize the Consultation Robe or Agenda Robe, you need 10 Schwartz Honor Tokens. The gear itself will not be destroyed. The card you already inserted and its smelting level will be safe as well.";
+		mes "To initialize the Consultation Robe or Agenda Robe, you need 5 Schwartz Honor Tokens. The gear itself will not be destroyed. The card you already inserted and its smelting level will be safe as well.";
 		next;
 		if (select( "No", "Let's do it" ) == 1) {
 			mes "[Hogar]";
@@ -10656,12 +10656,12 @@ rebel_in,90,40,5	script	Hogar#pa0829	4_M_MASKMAN,{
 			mes "Whoops, this item has not been fully upgraded. The initialization is not possible yet.";
 			close;
 		}
-		if (countitem(25155) < 10) {
+		if (countitem(25155) < 5) {
 			mes "[Hogar]";
 			mes "Listen, fellow. If you don't have any " + getitemname(25155) + ", you cannot trade with me.";
 			close;
 		}
-		delitem 25155,10;
+		delitem 25155,5;
 		delequip EQI_ARMOR;
 		getitem2 .@equip_id,1,1,.@refine,0,.@card[0],0,0,0;
 		specialeffect2 EF_REPAIRWEAPON;
@@ -10670,7 +10670,7 @@ rebel_in,90,40,5	script	Hogar#pa0829	4_M_MASKMAN,{
 		close;
 	case 5:
 		mes "[Hogar]";
-		mes "You need 10 Schwartz Honor Tokens to upgrade Mercenary Ring type A and B equipped on your left slot.";
+		mes "You need 5 Schwartz Honor Tokens to upgrade Mercenary Ring type A and B equipped on your left slot.";
 		next;
 		mes "[Hogar]";
 		mes "As I explained before, the initialization of rings is quite hard. ^ff0000The success rate is 80 percent.^000000 If it fails, the item is gone. Are you sure you want to do this?";
@@ -10713,12 +10713,12 @@ rebel_in,90,40,5	script	Hogar#pa0829	4_M_MASKMAN,{
 			mes "Whoops, this item has not been fully upgraded. The initialization is not possible yet.";
 			close;
 		}
-		if (countitem(25155) < 10) {
+		if (countitem(25155) < 5) {
 			mes "[Hogar]";
 			mes "Listen, fellow. If you don't have any " + getitemname(25155) + ", you cannot trade with me.";
 			close;
 		}
-		delitem 25155,10;
+		delitem 25155,5;
 		delequip EQI_ACC_L;
 		if (rand(100) < 20) {
 			specialeffect2 EF_LORD;
@@ -10735,7 +10735,7 @@ rebel_in,90,40,5	script	Hogar#pa0829	4_M_MASKMAN,{
 }
 
 // Exchanges
-rebel_in,74,67,5	script	Strasse#rebel_in	4_M_TATIO,{
+/*rebel_in,74,67,5	script	Strasse#rebel_in	4_M_TATIO,{
 	disable_items;
 	if (checkweight(501,1) == 0) {
 		mes "[Strasse]";
@@ -10771,12 +10771,12 @@ rebel_in,74,67,5	script	Strasse#rebel_in	4_M_TATIO,{
 	next;
 
 	setarray .@item[0],
-		15163, 1000,
-		15164, 1000,
-		20456, 1500,
-		19115, 2500,
-		28425, 1500,
-		28426, 1500;
+		15163, 250,
+		15164, 250,
+		20456, 200,
+		19115, 250,
+		28425, 100,
+		28426, 100;
 
 	.@s = (select( "Agenda Robe", "Consultation Robe", "Costume Combat Vestige", "Hat of Republic", "Mercenary Ring A type", "Mercenary Ring B type" ) - 1) * 2;
 	mes "[Strasse]";
@@ -10797,7 +10797,7 @@ rebel_in,74,67,5	script	Strasse#rebel_in	4_M_TATIO,{
 	}
 	// todo
 	close;
-}
+}*/
 
 rebel_in,89,46,3	script	Rotten#16nego01	4_M_SITDOWN,{
 	mes "[Rotten]";

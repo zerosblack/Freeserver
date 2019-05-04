@@ -13485,14 +13485,14 @@ prt_cas,165,255,7	script	Commissary#ep16	4_M_JOB_KNIGHT2,{
 	case 2:
 		.@type$ = "Armor";
 		setarray .@data[0],
-			28354,300,	// City Map[1]
-			28355,800,	// Shining Holy Water [1]
-			28900,800,	// Royal Guard Shield
-			28356,300,	// Prontera Badge
-			15146,1200,	// Flattery Robe
-			15147,1200,	// Invective Robe
-			20246,2200,	// Costume Time Decor
-			20247,2200;	// Black Hand of Destiny
+			28354,75,	// City Map[1]
+			28355,200,	// Shining Holy Water [1]
+			28900,200,	// Royal Guard Shield
+			28356,75,	// Prontera Badge
+			15146,350,	// Flattery Robe
+			15147,350,	// Invective Robe
+			20246,100,	// Costume Time Decor
+			20247,100;	// Black Hand of Destiny
 		break;
 	case 3:
 		mes "[Commissary Arner]";
