@@ -10642,7 +10642,7 @@ void clif_parse_LoadEndAck(int fd,struct map_session_data *sd)
 	if(!sd->state.autotrade && mapdata->flag[MF_LOADEVENT]) // Lance
 		npc_script_event(sd, NPCE_LOADMAP);
 
-	if (pc_checkskill(sd, SG_DEVIL) && pc_is_maxjoblv(sd))
+	if( pc_checkskill(sd, SG_DEVIL) && ((sd->class_&MAPID_THIRDMASK) == MAPID_STAR_EMPEROR || sd->status.job_level >= 50) && !pc_checkskill(sd, SJ_PURIFY))
 		clif_status_load(&sd->bl, EFST_DEVIL1, 1);  //blindness [Komurka]
 
 	if (sd->sc.opt2) //Client loses these on warp.
@@ -10922,7 +10922,7 @@ void clif_parse_QuitGame(int fd, struct map_session_data *sd)
 {
 	/*	Rovert's prevent logout option fixed [Valaris]	*/
 	//int type = RFIFOW(fd,packet_db[RFIFOW(fd,0)].pos[0]);
-	if( !sd->sc.data[SC_CLOAKING] && !sd->sc.data[SC_HIDING] && !sd->sc.data[SC_CHASEWALK] && !sd->sc.data[SC_CLOAKINGEXCEED] && !sd->sc.data[SC_SUHIDE] &&
+	if( !sd->sc.data[SC_CLOAKING] && !sd->sc.data[SC_HIDING] && !sd->sc.data[SC_CHASEWALK] && !sd->sc.data[SC_CLOAKINGEXCEED] && !sd->sc.data[SC_SUHIDE] && !sd->sc.data[SC_NEWMOON] &&
 		(!battle_config.prevent_logout || sd->canlog_tick == 0 || DIFF_TICK(gettick(), sd->canlog_tick) > battle_config.prevent_logout) )
 	{
 		set_eof(fd);
@@ -11285,7 +11285,7 @@ void clif_parse_Restart(int fd, struct map_session_data *sd)
 		break;
 	case 0x01:
 		/*	Rovert's Prevent logout option - Fixed [Valaris]	*/
-		if( !sd->sc.data[SC_CLOAKING] && !sd->sc.data[SC_HIDING] && !sd->sc.data[SC_CHASEWALK] && !sd->sc.data[SC_CLOAKINGEXCEED] && !sd->sc.data[SC_SUHIDE] &&
+		if( !sd->sc.data[SC_CLOAKING] && !sd->sc.data[SC_HIDING] && !sd->sc.data[SC_CHASEWALK] && !sd->sc.data[SC_CLOAKINGEXCEED] && !sd->sc.data[SC_SUHIDE] && !sd->sc.data[SC_NEWMOON] &&
 			(!battle_config.prevent_logout || sd->canlog_tick == 0 || DIFF_TICK(gettick(), sd->canlog_tick) > battle_config.prevent_logout) )
 		{	//Send to char-server for character selection.
 			pc_damage_log_clear(sd,0);

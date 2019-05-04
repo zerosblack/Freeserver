@@ -32,6 +32,7 @@ struct status_change_entry;
 #define MAX_SKILL_CRIMSON_MARKER 3 /// Max Crimson Marker targets (RL_C_MARKER)
 #define SKILL_NAME_LENGTH 31 /// Max Skill Name length
 #define SKILL_DESC_LENGTH 31 /// Max Skill Desc length
+#define MAX_STELLAR_MARKS 5 
 
 extern DBMap* skilldb_name2id;
 
@@ -560,6 +561,10 @@ enum e_require_state {
 	ST_ELEMENTALSPIRIT,
 	ST_ELEMENTALSPIRIT2,
 	ST_PECO,
+	ST_SUNSTANCE,
+	ST_MOONSTANCE,
+	ST_STARSTANCE,
+	ST_UNIVERSESTANCE,
 };
 
 /// List of Skills
@@ -2138,6 +2143,7 @@ enum s_skill_unit_id {
 
 	UNT_CATNIPPOWDER,
 	UNT_NYANGGRASS,
+	UNT_CREATINGSTAR = 0x109,
 
 	/**
 	 * Guild Auras

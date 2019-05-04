@@ -6891,8 +6891,8 @@ int pc_checkjoblevelup(struct map_session_data *sd)
 	clif_updatestatus(sd,SP_SKILLPOINT);
 	status_calc_pc(sd,SCO_FORCE);
 	clif_misceffect(&sd->bl,1);
-	if (pc_checkskill(sd, SG_DEVIL) && pc_is_maxbaselv(sd))
-		clif_status_change(&sd->bl, EFST_DEVIL1, 1, 0, 0, 0, 1); //Permanent blind effect from SG_DEVIL.
+	if (pc_checkskill(sd, SG_DEVIL) && ((sd->class_&MAPID_THIRDMASK) == MAPID_STAR_EMPEROR || sd->status.job_level >= 50) && !pc_checkskill(sd, SJ_PURIFY))
+		clif_status_load(&sd->bl,EFST_DEVIL1, 1); //Permanent blind effect from SG_DEVIL.
 
 	npc_script_event(sd, NPCE_JOBLVUP);
 	achievement_update_objective(sd, AG_GOAL_LEVEL, 1, sd->status.job_level);
@@ -7445,6 +7445,8 @@ void pc_skillup(struct map_session_data *sd,uint16 skill_id)
 			clif_updatestatus(sd,SP_SKILLPOINT);
 			if( skill_id == GN_REMODELING_CART ) /* cart weight info was updated by status_calc_pc */
 				clif_updatestatus(sd,SP_CARTINFO);
+			if( pc_checkskill(sd, SG_DEVIL) && ((sd->class_&MAPID_THIRDMASK) == MAPID_STAR_EMPEROR || sd->status.job_level >= 50) && !pc_checkskill(sd, SJ_PURIFY))
+				clif_status_load(&sd->bl, EFST_DEVIL1, 1);
 			if (!pc_has_permission(sd, PC_PERM_ALL_SKILL)) // may skill everything at any time anyways, and this would cause a huge slowdown
 				clif_skillinfoblock(sd);
 		}
@@ -8019,6 +8021,16 @@ int pc_dead(struct map_session_data *sd,struct block_list *src)
 			sd->devotion[k] = 0;
 		}
 	}
+	
+	for (k = 0; k < MAX_STELLAR_MARKS; k++) {
+		if (sd->stellar_mark[k]) {
+			struct map_session_data *smarksd = map_id2sd(sd->stellar_mark[k]);
+			if (smarksd)
+				status_change_end(&smarksd->bl, SC_FLASHKICK, INVALID_TIMER);
+			sd->stellar_mark[k] = 0;
+		}
+	}
+	
 	if(sd->shadowform_id) { //if we were target of shadowform
 		status_change_end(map_id2bl(sd->shadowform_id), SC__SHADOWFORM, INVALID_TIMER);
 		sd->shadowform_id = 0; //should be remove on status end anyway

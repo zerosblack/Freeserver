@@ -1092,6 +1092,11 @@ int64 battle_calc_damage(struct block_list *src,struct block_list *bl,struct Dam
 
 	if (skill_id == PA_PRESSURE || skill_id == HW_GRAVITATION)
 		return damage; //These skills bypass everything else.
+	
+	// Nothing can reduce the damage, but Safety Wall and Millennium Shield can block it completely.
+	// So can defense sphere's but what the heck is that??? [Rytech]
+	if (skill_id == SJ_NOVAEXPLOSING && !(sc && (sc->data[SC_SAFETYWALL] || sc->data[SC_MILLENNIUMSHIELD])))
+		return damage;
 
 	if( sc && sc->count ) { // SC_* that reduce damage to 0.
 		if( sc->data[SC_BASILICA] && !status_bl_has_mode(src,MD_STATUS_IMMUNE) ) {
@@ -4037,7 +4042,7 @@ static int battle_calc_attack_skill_ratio(struct Damage* wd, struct block_list *
 			}
 			break;
 		case SR_EARTHSHAKER:
-			if (tsc && ((tsc->option&(OPTION_HIDE|OPTION_CLOAK|OPTION_CHASEWALK)) || tsc->data[SC_CAMOUFLAGE] || tsc->data[SC_STEALTHFIELD] || tsc->data[SC__SHADOWFORM])) {
+			if (tsc && ((tsc->option&(OPTION_HIDE|OPTION_CLOAK|OPTION_CHASEWALK)) || tsc->data[SC_CAMOUFLAGE] || tsc->data[SC_STEALTHFIELD] || tsc->data[SC__SHADOWFORM] || tsc->data[SC_NEWMOON])) {
 				//[(Skill Level x 150) x (Caster Base Level / 100) + (Caster INT x 3)] %
 				skillratio += -100 + 150 * skill_lv;
 				RE_LVL_DMOD(100);
@@ -4354,6 +4359,40 @@ static int battle_calc_attack_skill_ratio(struct Damage* wd, struct block_list *
 			skillratio += 150 + 150 * skill_lv;
 			if (sd && pc_checkskill(sd, SU_SPIRITOFLIFE))
 				skillratio += skillratio * status_get_hp(src) / status_get_max_hp(src);
+			break;
+		//Star Emperor
+		case SJ_FULLMOONKICK:
+			skillratio = 1100 + 100 * skill_lv;
+			RE_LVL_DMOD(100);
+			if (sc && sc->data[SC_LIGHTOFMOON])
+				skillratio *= (100 + sc->data[SC_LIGHTOFMOON]->val2) / 100;
+			break;
+		case SJ_NEWMOONKICK:
+			skillratio = 700 + 100 * skill_lv;
+			break;				
+		case SJ_STAREMPEROR:
+			skillratio = 800 + 200 * skill_lv;
+			break;
+		case SJ_SOLARBURST:
+			skillratio = 700 + 250 * skill_lv;
+			RE_LVL_DMOD(100);
+			if (sc && sc->data[SC_LIGHTOFSUN])
+				skillratio *= (100 + sc->data[SC_LIGHTOFSUN]->val2) / 100;
+			break;
+		case SJ_FLASHKICK:
+		case SJ_PROMINENCEKICK:
+			//if (!(mflag&8))// Ratio for main hit. The fire hit is just 100%.						
+				skillratio = 150 + 50 * skill_lv;
+			break;
+		case SJ_FALLINGSTAR_ATK:
+		case SJ_FALLINGSTAR_ATK2:
+			skillratio = 100 + 100 * skill_lv;
+			RE_LVL_DMOD(100);
+			if (sc && sc->data[SC_LIGHTOFSTAR])
+				skillratio *= (100 + sc->data[SC_LIGHTOFSTAR]->val2) / 100;
+			break;
+		case SJ_BOOKOFCREATINGSTAR:
+			skillratio = 100;
 			break;
 	}
 	return skillratio;
@@ -5235,6 +5274,9 @@ static struct Damage initialize_weapon_data(struct block_list *src, struct block
 				break;
 			case LK_SPIRALPIERCE:
 				if (!sd) wd.flag = (wd.flag&~(BF_RANGEMASK|BF_WEAPONMASK))|BF_LONG|BF_MISC;
+				break;
+			case SJ_BOOKOFCREATINGSTAR:
+				if (!sd) wd.flag = (wd.flag&~(BF_RANGEMASK|BF_WEAPONMASK))|BF_LONG|BF_WEAPON;
 				break;
 
 			// The number of hits is set to 3 by default for use in Inspiration status.
@@ -6657,6 +6699,14 @@ struct Damage battle_calc_misc_attack(struct block_list *src,struct block_list *
 		case SU_SV_ROOTTWIST_ATK:
 			md.damage = 100;
 			break;
+		case SJ_NOVAEXPLOSING:
+		{
+			// (Base ATK + Weapon ATK) * Ratio
+			md.damage = ((int64)sstatus->batk + (int64)sstatus->rhw.atk) * (200 + 100 * skill_lv) / 100;
+			// Additional Damage
+			md.damage += sstatus->max_hp / (6 - cap_value(skill_lv, 1, 5)) + status_get_max_sp(src) * (2 * skill_lv);
+		}
+			break;
 	}
 
 	if (nk&NK_SPLASHSPLIT) { // Divide ATK among targets
@@ -7174,6 +7224,8 @@ enum damage_lv battle_weapon_attack(struct block_list* src, struct block_list* t
 			status_change_end(src, SC_CLOAKING, INVALID_TIMER);
 		else if (sc->data[SC_CLOAKINGEXCEED] && !(sc->data[SC_CLOAKINGEXCEED]->val4 & 2))
 			status_change_end(src, SC_CLOAKINGEXCEED, INVALID_TIMER);
+		else if (sc->data[SC_NEWMOON] && (sc->data[SC_NEWMOON]->val2) <= 0)
+			status_change_end(src, SC_NEWMOON, INVALID_TIMER);
 	}
 	if (tsc && tsc->data[SC_AUTOCOUNTER] && status_check_skilluse(target, src, KN_AUTOCOUNTER, 1)) {
 		uint8 dir = map_calc_dir(target,src->x,src->y);
@@ -7489,6 +7541,17 @@ enum damage_lv battle_weapon_attack(struct block_list* src, struct block_list* t
 				sd->ud.canact_tick = i64max(tick + skill_delayfix(src, r_skill, r_lv), sd->ud.canact_tick);
 				clif_status_change(src, EFST_POSTDELAY, 1, skill_delayfix(src, r_skill, r_lv), 0, 0, 1);
 			}
+		}
+		
+		if( wd.flag&BF_WEAPON && sc && sc->data[SC_FALLINGSTAR] && rand()%100 < sc->data[SC_FALLINGSTAR]->val2 )
+		{
+			uint16 skill_id = SJ_FALLINGSTAR_ATK;
+			uint16 skill_lv = sc->data[SC_FALLINGSTAR]->val1;
+
+			if (sd) sd->state.autocast = 1;
+			if (status_charge(src, 0, skill_get_sp(skill_id,skill_lv)))
+				skill_castend_nodamage_id(src, src, skill_id, skill_lv, tick, flag);
+			if (sd) sd->state.autocast = 0;
 		}
 
 		if (wd.flag & BF_WEAPON && src != target && damage > 0) {
