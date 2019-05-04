@@ -334,6 +334,7 @@ void initChangeTables(void)
 	set_sc( NPC_BLEEDING		, SC_BLEEDING		, EFST_BLOODING, SCB_REGEN );
 	set_sc( NPC_POISON		, SC_DPOISON		, EFST_BLANK		, SCB_DEF2|SCB_REGEN );
 	add_sc( ALL_REVERSEORCISH,	SC_ORCISH );
+	set_sc( NPC_WIDEWEB			, SC_WIDEWEB	, EFST_WIDEWEB		, SCB_FLEE );
 
 	/* The main status definitions */
 	add_sc( SM_BASH			, SC_STUN		);
@@ -1604,6 +1605,7 @@ void initChangeTables(void)
 	StatusChangeStateTable[SC_ANKLE]				|= SCS_NOMOVE;
 	StatusChangeStateTable[SC_AUTOCOUNTER]			|= SCS_NOMOVE;
 	StatusChangeStateTable[SC_TRICKDEAD]			|= SCS_NOMOVE;
+	StatusChangeStateTable[SC_WIDEWEB]			|= SCS_NOMOVE;
 	StatusChangeStateTable[SC_BLADESTOP]			|= SCS_NOMOVE;
 	StatusChangeStateTable[SC_BLADESTOP_WAIT]		|= SCS_NOMOVE;
 	StatusChangeStateTable[SC_GOSPEL]				|= SCS_NOMOVE|SCS_NOMOVECOND;
@@ -6805,7 +6807,7 @@ static signed short status_calc_flee(struct block_list *bl, struct status_change
 	// Rate value
 	if(sc->data[SC_INCFLEERATE])
 		flee += flee * sc->data[SC_INCFLEERATE]->val1/100;
-	if(sc->data[SC_SPIDERWEB])
+	if(sc->data[SC_SPIDERWEB] || sc->data[SC_WIDEWEB])
 		flee -= flee * 50/100;
 	if(sc->data[SC_BERSERK])
 		flee -= flee * 50/100;
@@ -12152,6 +12154,7 @@ int status_change_start(struct block_list* src, struct block_list* bl,enum sc_ty
 		// Fall through
 		case SC_ANKLE:
 		case SC_SPIDERWEB:
+		case SC_WIDEWEB:
 		case SC_ELECTRICSHOCKER:
 		case SC_MAGNETICFIELD:
 		case SC_NETHERWORLD:

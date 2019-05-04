@@ -43,9 +43,9 @@
 6671	//Geffen_Coin_Magic_Tournament
 6672	//Shard_of_Gray
 //11620
-25256	//Hazy_Dream_Fragment
-25257	//Bloody_Love_Letter
-25258	//Broken_Arrow
+25256  // Hazy_Dream_Fragment
+25257  // Bloody_Love_Letter
+25258  // Broken_Arrow
 //25261
 //25262
 //25263
@@ -53,7 +53,7 @@
 //25265
 //25266
 //25267
-25271	//Illusion_Stone
+25271  // Illusion_Stone
 //25297
 //25298
 //25299
@@ -968,7 +968,7 @@
 12351	//Shout_Megaphone
 12354	//Buche_De_Noel
 12355	//Xmas_Gift
-12356	//Louise_Costume_Box
+12356  // Louise_Costume_Box
 12418	//Full_SwingK
 12419	//Mana_Plus
 12422	//HP_Increase_Potion_(Small)

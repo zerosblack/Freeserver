@@ -6245,10 +6245,7 @@ struct Damage battle_calc_magic_attack(struct block_list *src, struct block_list
 				break;
 
 			case WZ_VERMILION:
-				if (sd)
-					skillratio += -100 + 400 + 100 * skill_lv;
-				else
-					skillratio += 20 * skill_lv - 20; //Monsters use old formula
+				skillratio += -100 + 400 + 100 * skill_lv;
 				break;
 			case BA_DISSONANCE:
 				skillratio += skill_lv * 10;

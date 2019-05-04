@@ -674,6 +674,9 @@
 19026:22059,{ bonus2 bCriticalAddRace,RC_Fish,(10+getequiprefinerycnt(EQI_SHOES)); }
 19038:19039,{ .@r = getequiprefinerycnt(EQI_HEAD_TOP)+getequiprefinerycnt(EQI_HEAD_MID); if((.@r==7)||(.@r==8)){ bonus bCritical,12; bonus bHit,12; } if(.@r>=9){ bonus bMaxHP,1200; bonus bMaxSP,120; } }
 19082:18933:2268,{ bonus2 bSkillUseSP,"GN_SPORE_EXPLOSION",20; }
+19085:40141,{ bonus2 bSubClass,Class_Boss,3*getskilllv("SJ_FALLINGSTAR"); bonus3 bAutoSpell,"SJ_FLASHKICK",max(1,getskilllv("SJ_FLASHKICK")),10*getskilllv("SJ_FULLMOONKICK"); .@a = (readparam(bStr)+readparam(bLuk))/80; bonus2 bAddClass,Class_All,6*.@a; bonus bCritical,5*.@a; bonus bCritAtkRate,10*.@a; bonus2 bSkillFixedCast,"SG_HATE",-3000; }
+19085:40147,{ .@a = (readparam(bInt)+readparam(bDex))/80; bonus2 bSubClass,Class_Boss,3*getskilllv("SP_SWHOO"); bonus2 bSkillCooldown,"SP_SWHOO",-1500; bonus bMatk,120*.@a; bonus bMaxHPrate,15*.@a; bonus bVariablecastrate,-3*.@a; }
+19085:40147:40138,{ .@a = (readparam(bInt)+readparam(bDex))/80; bonus bMaxHPrate,-15*.@a; }
 19114:4226,{ bonus2 bSubSize,Size_All,10; }
 19114:5548,{ bonus2 bSubSize,Size_All,5; }
 19117:22101,{ bonus2 bDropAddRace,RC_All,5; bonus2 bExpAddRace,RC_All,5; if(getequiprefinerycnt(EQI_SHOES) >= 12) { bonus bFixedCast,-400; } }

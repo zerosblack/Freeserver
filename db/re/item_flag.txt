@@ -1785,3 +1785,18 @@
 12622,32 //Boarding_Halter
 12887,32 //C_Wing_Of_Fly
 22508,32 //Para_Team_Mark_
+41007,32 //soul link
+41008,32 //soul link
+41009,32 //soul link
+41010,32 //soul link
+41011,32 //soul link
+41012,32 //soul link
+41013,32 //soul link
+41014,32 //soul link
+41015,32 //soul link
+41016,32 //soul link
+41017,32 //soul link
+41018,32 //soul link
+41019,32 //soul link
+41020,32 //soul link
+41021,32 //Bard Dance
