@@ -429,6 +429,7 @@
 2987:18872,{ bonus bMatk,BaseLevel/4; }
 2990:2991,{ bonus bAllStats,5; bonus5 bAutoSpellWhenHit,"SC_MAELSTROM",1,100,BF_MAGIC,0; }
 2995:15110,{ bonus2 bSkillAtk,"NC_AXEBOOMERANG",100; }
+2995:15343,{ bonus2 bSkillAtk,"NC_AXEBOOMERANG",100; }
 2997:2999,{ bonus2 bAddClass,Class_All,10; bonus bMatkRate,10; }
 32242:18971,{ bonus2 bFixedCastrate,"RK_STORMBLAST",-100; }
 32242:18972,{ bonus bMaxHPRate,50; }
@@ -669,6 +670,9 @@
 15205:4114,{ if (getequiprefinerycnt(EQI_ARMOR)>=9) { bonus2 bResEff,Eff_Freeze,10000; } }
 15212:20856,{ bonus bDelayrate,-getequiprefinerycnt(EQI_GARMENT); }
 15212:20856:22141,{ if ((getequiprefinerycnt(EQI_ARMOR)+getequiprefinerycnt(EQI_GARMENT)+getequiprefinerycnt(EQI_SHOES)) >= 39) { autobonus "{ bonus bIgnoreDefClass,Class_Normal; bonus bIgnoreDefClass,Class_Boss; }",50,5000; } }
+15343:20732,{ bonus2 bSkillAtk,"NC_AXETORNADO",25; }
+15343:22043,{ bonus bBaseAtk,30; }
+15344:2996:20733:22044,{ bonus2 bSkillAtk,"NC_ARMSCANNON",50; }
 15348:19366:20923:22192,{ bonus bVit,5; bonus bMaxSPrate,5; bonus bDef,5; bonus bMdef,15; bonus2 bSubEle,Ele_Water,10; bonus2 bSubEle,Ele_Earth,10; bonus2 bSubEle,Ele_Fire,10; bonus2 bSubEle,Ele_Wind,10; .@hp = 15; .@r[0] = getequiprefinerycnt(EQI_ARMOR); .@r[1] = getequiprefinerycnt(EQI_HEAD_TOP); .@r[2] = getequiprefinerycnt(EQI_GARMENT); .@r[3] = getequiprefinerycnt(EQI_SHOES); .@sum = .@r[0]+.@r[1]+.@r[2]+.@r[3]; if (.@r[0] >= 7 && .@r[1] >= 7 && .@r[2] >= 7 && .@r[3] >= 7) { .@hp += 10; } bonus bMaxHPrate,.@hp; if (.@sum >= 36) { bonus bFixedCast,-700; if (.@sum >= 40) { bonus bDelayrate,-20; } } }
 15376:22196,{ bonus2 bAddClass,Class_All,5; }
 15376:22197,{ bonus bMaxSPRate,5; }
