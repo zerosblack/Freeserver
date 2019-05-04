@@ -4704,7 +4704,7 @@
 6658,Halloween_Coin,Halloween Coin,3,0,,0,,,,,,,,,,,,,{},{},{}
 6665,RWC_Inicializer,RWC Inicializer,3,0,,10,,,,,,,,,,,,,{},{},{}
 6671,Geffen_Coin_Magic_Tournament,Geffen Coin Magic Tournament,3,10,,0,,,,,,,,,,,,,{},{},{}
-6672,Shard_of_Gray,Shard of Gray,3,10,,0,,,,,,,,,,,,,{},{},{}
+6672,Shard_of_Gray,Gray Shard,3,1,,1,,,,,,,,,,,,,{},{},{}
 6673,Bossnia_Tickets,Bossnia Tickets,3,10,,0,,,,,,,,,,,,,{},{},{}
 6674,GM_Coin,GM Coin,3,0,,10,,,,,,,,,,,,,{},{},{}
 6681,XMAS_Cookie,Christmas Cookie,3,20,,10,,,,,,,,,,,,,{},{},{}
