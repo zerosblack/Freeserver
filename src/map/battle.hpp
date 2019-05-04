@@ -661,6 +661,7 @@ struct Battle_Config
 	int feature_equipswitch;
 	int pet_walk_speed;
 	int homunculus_exp_gain;
+	int blocking_play_delay;
 
 #include "../custom/battle_config_struct.inc"
 };

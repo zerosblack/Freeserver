@@ -8528,6 +8528,7 @@ static const struct _battle_data {
 	{ "feature.equipswitch",                &battle_config.feature_equipswitch,             1,      0,      1,              },
 	{ "pet_walk_speed",                     &battle_config.pet_walk_speed,                  1,      1,      3,              },
 	{ "homunculus_exp_gain",                &battle_config.homunculus_exp_gain,             10,     0,      100,            },
+	{ "blocking_play_delay",                &battle_config.blocking_play_delay,             20000,  0,      INT_MAX,        },
 
 #include "../custom/battle_config_init.inc"
 };
