@@ -1273,7 +1273,7 @@
 7878,499,100	// Lusalka_Hair
 7879,499,100	// Golden_Thread
 7880,499,100	// Babayaga_Silver_Spoon
-7881,499,100	// Book_Of_Magic
+7881,499,100	// Mystery_Magic_Book
 7882,499,100	// Pointed_Branch
 7883,499,100	// Pointed_Wooden_Flute
 7884,475,100	// Jade_Plate
