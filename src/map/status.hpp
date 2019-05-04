@@ -879,6 +879,7 @@ enum sc_type : int16 {
 
 	SC_ANCILLA,
 	SC_WEAPONBLOCK_ON,
+	SC_WIDEWEB,
 
 	SC_BLOCKING_PLAY,
 	
