@@ -15,7 +15,7 @@
 //= 1.9 Migrate/Integrate to Global Functions Platinum Skills. [mazvi]
 //============================================================
 
-prontera,153,193,6	script	Job Master	123,{
+prontera,155,195,4	script	Job Master	4_F_VALKYRIE,{
 function Get_Job_Equip;
 // Checks if the Player has the required level.
 // closes if not, returns if yes
@@ -433,17 +433,17 @@ function	Get_Job_Equip	{
 		switch(BaseClass) {
 			// First Class
 			case Job_Swordman:
-				getitem 1108,1;	break;	//	Blade [4]
+				getitem 13415,1;	break;	//	Novice Falchion
 			case Job_Mage:
-				getitem 1602,1;	break;	//	Rod [4]
+				getitem 1639,1;	break;	//	Novice Rod
 			case Job_Archer:
-				getitem 1705,1;	break;	//	Composite Bow [4]
+				getitem 1742,1;	break;	//	Novice Composite Bow
 			case Job_Acolyte:
-				getitem 1505,1;	break;	//	Mace [4]
+				getitem 1545,1;	break;	//	Novice Mace
 			case Job_Merchant:
-				getitem 1302,1;	break;	//	Axe [4]
+				getitem 1381,1;	break;	//	Novice Battle Axe
 			case Job_Thief:
-				getitem 1208,1;	break;	//	Main Gauche [4]
+				getitem 13040,1;	break;	//	Novice Cutter
 		}
 	}
 	return;
@@ -465,7 +465,7 @@ OnInit:
 	.LastJob = true;				// Enforce linear class changes?
 	.SkillPointCheck = true;		// Force player to use up all skill points?
 	.Platinum = true;				// Get platinum skills automatically?
-	.GetJobEquip = false;			// Get job equipment (mostly weapons) on job change?
+	.GetJobEquip = true;			// Get job equipment (mostly weapons) on job change?
 
 	// Level Requirements
 	setarray .Req_First[0],1,10; 		// Minimum base level, job level to turn into 1st class

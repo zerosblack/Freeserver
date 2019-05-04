@@ -1,0 +1,94 @@
+//===== rAthena Script =======================================
+//= Shop Street
+//===== By: ==================================================
+//= Masao(Shopstreet) - Original Mall Script
+//= Virtue(All in 1 Mall NPC)
+//===== Current Version: =====================================
+//= 1.0 [Masao]
+//===== Compatible With: =====================================
+//= rAthena SVN
+//= Judas SVN
+//===== Description: =========================================
+//Street Mall in One NPC
+//Change "Your Server Name" to your Server Name or whhat ever you desire"
+//============================================================
+
+prontera,168,191,4	script	แหล่งเก็บเลเวล	4_F_FRUIT,{
+mes "[ผูู้ช่วยนักเดินทาง]";
+mes "สวัสดี ท่านต้องการไปเก็บเลเวลแบบไหน?";
+switch(select("^ff0000เควสล่ามอนสเตอร์^000000:สมาคม Eden")) {
+case 1:
+next;
+mes "[ผูู้ช่วยนักเดินทาง]";
+mes "เควสล่ามอนสเตอร์ ท่านต้องการไปที่ไหนละ?";
+switch(select("Prontera:Payon:Geffen:Umbala:Comodo:Juno:Brasilis:Lighthalzen:Hugel:Midgard Camp:El Dicastes:Al de Baran:Mora:^ff0000New-Rudus^000000")) {
+	case 1:
+	warp "prontera",142,226;
+	end;
+
+	case 2:
+	warp "payon",153,92;
+	end;
+
+	case 3:
+	warp "geffen",73,75;
+	end;
+	
+	case 4:
+	warp "umbala",127,85;
+	end;
+	
+	case 5:
+	warp "comodo",106,132;
+	end;
+
+	case 6:
+	warp "yuno",181,141;
+	end;
+
+	case 7:
+	warp "brasilis",187,223;
+	end;
+
+	case 8:
+	warp "lighthalzen",190,158;
+	end;
+
+	case 9:
+	warp "hugel",70,150;
+	end;
+
+	case 10:
+	warp "mid_camp",182,250;
+	end;
+
+	case 11:
+	warp "dicastes01",199,48;
+	end;
+
+	case 12:
+	warp "aldebaran",140,129;
+	end;
+
+	case 13:
+	warp "mora",95,107;
+	end;
+	
+	case 14:
+	warp "sp_cor",151,164;
+	end;
+}
+
+case 2:
+next;
+mes "[ผูู้ช่วยนักเดินทาง]";
+mes "สมาคม Eden งั้นหรือ? งั้นไปกันเลย";
+next;
+warp "moc_para01",31,14;
+end;
+}
+
+OnInit:
+	waitingroom "เควสป้าย เก็บเลเวล",0;
+
+}

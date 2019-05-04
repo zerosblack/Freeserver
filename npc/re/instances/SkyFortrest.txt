@@ -145,7 +145,7 @@ prt_q,249,79,4	script	Scientist Doyeon#a1	4_M_MAYOR,{
 		mes "a lot of magic is required.";
 		mes "Bring me the item called the -Dungeon Pass-,";
 		mes "or I need about";
-		mes "three days to collect magic.";
+		mes "4 hours to collect magic.";
 		next;
 		mes "[Scientist Doyeon]";
 		mes "I hope you'd enter the Sky Fortress";
@@ -166,7 +166,7 @@ prt_q,249,79,4	script	Scientist Doyeon#a1	4_M_MAYOR,{
 		mes "a lot of magic is required.";
 		mes "Bring me the item called the -Dungeon Pass-,";
 		mes "or I need about";
-		mes "three days to collect magic.";
+		mes "4 hours to collect magic.";
 		next;
 		if (getcharid(1) > 0 && getpartyleader(getcharid(1),2) == getcharid(0)) {
 			if (select( "End the dialogue.", "Show the -Dungeon Pass-." ) == 2) {
@@ -1081,7 +1081,7 @@ OnWindDead:
 	disablenpc instance_npcname( strnpcinfo(0) );
 	close;
 OnBar:
-	progressbar_npc "000000",3;
+	progressbar_npc "000000",3,"Sky Fortress Gold Treasure#1";
 	end;
 }
 
@@ -1190,7 +1190,7 @@ OnTouch:
 	monster 'sthb_map$,52,50,"Immortal Zombie Assault",3479,1;
 	monster 'sthb_map$,36,60,"Immortal Cursed Zombie",3480,1;
 	monster 'sthb_map$,36,58,"Immortal Cursed Zombie",3480,1;
-	if (rand(100) < 10)	// unknown rates
+	if (rand(100) < 40)	// unknown rates
 		monster 'sthb_map$,65,86,"Sky Fortress Key Keeper",3478,1;	// unknown coord
 	end;
 }
@@ -1211,7 +1211,7 @@ OnTouch:
 	monster 'sthb_map$,84,95,"Immortal Cursed Zombie",3480,1;
 	monster 'sthb_map$,83,94,"Immortal Cursed Zombie",3480,1;
 	monster 'sthb_map$,84,86,"Immortal Cursed Zombie",3480,1;
-	if (rand(100) < 10)	// unknown rates
+	if (rand(100) < 40)	// unknown rates
 		monster 'sthb_map$,80,49,"Sky Fortress Key Keeper",3478,1;
 	end;
 }
@@ -1233,7 +1233,7 @@ OnTouch:
 	monster 'sthb_map$,29,67,"Immortal Cursed Zombie",3480,1;
 	monster 'sthb_map$,27,42,"Immortal Cursed Zombie",3480,1;
 	monster 'sthb_map$,26,43,"Immortal Cursed Zombie",3480,1;
-	if (rand(100) < 10)	// unknown rates
+	if (rand(100) < 40)	// unknown rates
 		monster 'sthb_map$,57,96,"Sky Fortress Key Keeper",3478,1;	// unknown coord
 	end;
 }
@@ -1253,7 +1253,7 @@ OnTouch:
 	monster 'sthb_map$,90,40,"Immortal Cursed Zombie",3480,1;
 	monster 'sthb_map$,93,39,"Immortal Cursed Zombie",3480,1;
 	monster 'sthb_map$,94,39,"Immortal Cursed Zombie",3480,1;
-	if (rand(100) < 10)	// unknown rates
+	if (rand(100) < 40)	// unknown rates
 		monster 'sthb_map$,32,39,"Sky Fortress Key Keeper",3478,1;	// unknown coord
 	end;
 }
@@ -1272,7 +1272,7 @@ OnTouch:
 	monster 'sthb_map$,171,37,"Immortal Cursed Zombie",3480,1;
 	monster 'sthb_map$,171,36,"Immortal Cursed Zombie",3480,1;
 	monster 'sthb_map$,144,38,"Immortal Cursed Zombie",3480,1;
-	if (rand(100) < 10)	// unknown rates
+	if (rand(100) < 40)	// unknown rates
 		monster 'sthb_map$,163,38,"Sky Fortress Key Keeper",3478,1;
 	end;
 }
@@ -1293,7 +1293,7 @@ OnTouch:
 	monster 'sthb_map$,144,93,"Immortal Cursed Zombie",3480,1;
 	monster 'sthb_map$,143,94,"Immortal Cursed Zombie",3480,1;
 	monster 'sthb_map$,155,92,"Immortal Cursed Zombie",3480,1;
-	if (rand(100) < 10)	// unknown rates
+	if (rand(100) < 40)	// unknown rates
 		monster 'sthb_map$,144,47,"Sky Fortress Key Keeper",3478,1;	// unknown coord
 	end;
 }
@@ -1314,7 +1314,7 @@ OnTouch:
 	monster 'sthb_map$,198,62,"Immortal Cursed Zombie",3480,1;
 	monster 'sthb_map$,200,46,"Immortal Cursed Zombie",3480,1;
 	monster 'sthb_map$,199,48,"Immortal Cursed Zombie",3480,1;
-	if (rand(100) < 10)	// unknown rates
+	if (rand(100) < 40)	// unknown rates
 		monster 'sthb_map$,178,94,"Sky Fortress Key Keeper",3478,1;	// unknown coord
 	end;
 }
@@ -1335,7 +1335,7 @@ OnTouch:
 	monster 'sthb_map$,155,78,"Immortal Cursed Zombie",3480,1;
 	monster 'sthb_map$,155,76,"Immortal Cursed Zombie",3480,1;
 	monster 'sthb_map$,153,84,"Immortal Cursed Zombie",3480,1;
-	if (rand(100) < 10)	// unknown rates
+	if (rand(100) < 40)	// unknown rates
 		monster 'sthb_map$,179,48,"Sky Fortress Key Keeper",3478,1;	// unknown coord
 	end;
 }
