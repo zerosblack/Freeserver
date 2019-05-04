@@ -662,6 +662,10 @@ struct Battle_Config
 	int pet_walk_speed;
 	int homunculus_exp_gain;
 	int blocking_play_delay;
+	int instance_block_leave;
+	int instance_block_leaderchange;
+	int instance_block_invite;
+	int instance_block_expulsion;
 
 #include "../custom/battle_config_struct.inc"
 };

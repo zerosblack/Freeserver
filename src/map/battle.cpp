@@ -8512,6 +8512,10 @@ static const struct _battle_data {
 	{ "pet_walk_speed",                     &battle_config.pet_walk_speed,                  1,      1,      3,              },
 	{ "homunculus_exp_gain",                &battle_config.homunculus_exp_gain,             10,     0,      100,            },
 	{ "blocking_play_delay",                &battle_config.blocking_play_delay,             20000,  0,      INT_MAX,        },
+	{ "instance_block_leave",               &battle_config.instance_block_leave,            1,      0,      1,              },
+	{ "instance_block_leaderchange",        &battle_config.instance_block_leaderchange,     1,      0,      1,              },
+	{ "instance_block_invite",              &battle_config.instance_block_invite,           1,      0,      1,              },
+	{ "instance_block_expulsion",           &battle_config.instance_block_expulsion,        1,      0,      1,              },
 
 #include "../custom/battle_config_init.inc"
 };
