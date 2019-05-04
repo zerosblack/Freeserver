@@ -704,6 +704,10 @@ void do_init_buyingstore_autotrade( void ) {
 					at->sd->state.block_action |= PCBLOCK_IMMUNE;
 				else
 					at->sd->state.block_action &= ~PCBLOCK_IMMUNE;
+			
+				// Extended Vending System Fix Bug [CreativeSD]
+				at-> sd-> vend_loot = at-> vend_loot;
+				
 				chrif_authreq(at->sd, true);
 				uidb_put(buyingstore_autotrader_db, at->char_id, at);
 			}

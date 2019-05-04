@@ -675,6 +675,16 @@ struct Battle_Config
 	int instance_block_leaderchange;
 	int instance_block_invite;
 	int instance_block_expulsion;
+	/**
+	* Extended Vending system [Lilith]
+	**/
+	int extended_vending;
+	int show_broadcas_info;
+	int show_item_vending;
+	int ex_vending_info;
+	int ex_vending_report;
+	int item_zeny;
+	int item_cash;
 
 #include "../custom/battle_config_struct.inc"
 };
