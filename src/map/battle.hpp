@@ -660,6 +660,7 @@ struct Battle_Config
 	int min_shop_sell;
 	int feature_equipswitch;
 	int pet_walk_speed;
+	int homunculus_exp_gain;
 
 #include "../custom/battle_config_struct.inc"
 };

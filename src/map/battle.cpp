@@ -4250,10 +4250,10 @@ static int battle_calc_attack_skill_ratio(struct Damage* wd, struct block_list *
 			skillratio += -100 + 20 * skill_lv;
 			break;
 		case MH_NEEDLE_OF_PARALYZE:
-			skillratio += 600 + 100 * skill_lv;
+			skillratio += 400 + 100 * skill_lv;
 			break;
 		case MH_STAHL_HORN:
-			skillratio += 400 + 100 * skill_lv * status_get_lv(src) / 150;
+			skillratio += 900 + 100 * skill_lv * status_get_lv(src) / 150;
 			break;
 		case MH_LAVA_SLIDE:
 			skillratio += -100 + 70 * skill_lv;
@@ -4262,7 +4262,7 @@ static int battle_calc_attack_skill_ratio(struct Damage* wd, struct block_list *
 			skillratio += -100 + 40 * skill_lv * status_get_lv(src) / 150;
 			break;
 		case MH_SILVERVEIN_RUSH:
-			skillratio += -100 + 150 * skill_lv * status_get_lv(src) / 100;
+			skillratio += -100 + 200 * skill_lv * status_get_lv(src) / 100;
 			break;
 		case MH_MIDNIGHT_FRENZY:
 			skillratio += -100 + 300 * skill_lv * status_get_lv(src) / 150;
@@ -6182,17 +6182,13 @@ struct Damage battle_calc_magic_attack(struct block_list *src,struct block_list 
 						skillratio += 1100;
 						break;
 					case MH_ERASER_CUTTER:
-						skillratio += 400 + 100 * skill_lv + (skill_lv%2 > 0 ? 0 : 300);
+						skillratio += 700 + 100 * skill_lv;
 						break;
 					case MH_XENO_SLASHER:
-						if(skill_lv%2)
-							skillratio += 350 + 50 * skill_lv; //500:600:700
-						else
-							skillratio += 400 + 100 * skill_lv; //700:900
+						skillratio += 100 + 300 * skill_lv;
 						break;
 					case MH_HEILIGE_STANGE:
-						skillratio += 400 + 250 * skill_lv;
-						skillratio = (skillratio * status_get_lv(src)) / 150;
+						skillratio += 400 + 250 * skill_lv * status_get_lv(src) / 150;
 						break;
 					case MH_POISON_MIST:
 						skillratio += -100 + 40 * skill_lv * status_get_lv(src) / 100;
@@ -8531,6 +8527,7 @@ static const struct _battle_data {
 	{ "min_shop_sell",                      &battle_config.min_shop_sell,                   0,      0,      INT_MAX,        },
 	{ "feature.equipswitch",                &battle_config.feature_equipswitch,             1,      0,      1,              },
 	{ "pet_walk_speed",                     &battle_config.pet_walk_speed,                  1,      1,      3,              },
+	{ "homunculus_exp_gain",                &battle_config.homunculus_exp_gain,             10,     0,      100,            },
 
 #include "../custom/battle_config_init.inc"
 };
