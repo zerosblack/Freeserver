@@ -2090,6 +2090,7 @@ int map_quit(struct map_session_data *sd) {
 			status_change_end(&sd->bl, SC_PROVOKE, INVALID_TIMER); //Infinite provoke ends on logout
 		status_change_end(&sd->bl, SC_WEIGHT50, INVALID_TIMER);
 		status_change_end(&sd->bl, SC_WEIGHT90, INVALID_TIMER);
+		status_change_end(&sd->bl, SC_SOULCOLLECT, INVALID_TIMER);
 		status_change_end(&sd->bl, SC_SATURDAYNIGHTFEVER, INVALID_TIMER);
 		status_change_end(&sd->bl, SC_KYOUGAKU, INVALID_TIMER);
 		status_change_end(&sd->bl, SC_C_MARKER, INVALID_TIMER);
@@ -2153,6 +2154,10 @@ int map_quit(struct map_session_data *sd) {
 			status_change_end(&sd->bl, SC_GLASTHEIM_STATE, INVALID_TIMER);
 			status_change_end(&sd->bl, SC_GLASTHEIM_ITEMDEF, INVALID_TIMER);
 			status_change_end(&sd->bl, SC_GLASTHEIM_HPSP, INVALID_TIMER);
+			status_change_end(&sd->bl, SC_SOULGOLEM, INVALID_TIMER);
+			status_change_end(&sd->bl, SC_SOULSHADOW, INVALID_TIMER);
+			status_change_end(&sd->bl, SC_SOULFALCON, INVALID_TIMER);
+			status_change_end(&sd->bl, SC_SOULFAIRY, INVALID_TIMER);
 		}
 	}
 

@@ -519,6 +519,14 @@ int64 battle_attr_fix(struct block_list *src, struct block_list *target, int64 d
 					damage += (int64)(damage * (tsc->data[SC_ORATIO]->val1 * 2) / 100);
 #endif
 				break;
+			case ELE_DARK:
+				if (tsc->data[SC_SOULCURSE]) {
+					if( status_get_class_(target) == CLASS_BOSS ) 
+						ratio += 50;
+					else
+						ratio += 100;
+				}
+				break;	
 			case ELE_POISON:
 				if (tsc->data[SC_VENOMIMPRESS])
 #ifdef RENEWAL
@@ -1524,6 +1532,14 @@ int64 battle_calc_damage(struct block_list *src,struct block_list *bl,struct Dam
 	if (sc && sc->count) {
 		if( sc->data[SC_INVINCIBLE] && !sc->data[SC_INVINCIBLEOFF] )
 			damage += damage * 75 / 100;
+ 
+		/*if ( sce = sc->data[SC_SOULREAPER]){
+			struct map_session_data *src_sd = (struct map_session_data *)src;
+			if( src_sd && rand()%100 < sce->val2){
+				clif_specialeffect(src, 1208, AREA);
+				pc_addspiritball(src_sd, skill_get_time2(SP_SOULREAPER, sce->val1), 5+3*pc_checkskill(src_sd, SP_SOULENERGY));
+			}
+		}*/
 
 		if ((sce = sc->data[SC_BLOODLUST]) && flag&BF_WEAPON && damage > 0 && rnd()%100 < sce->val3)
 			status_heal(src, damage * sce->val4 / 100, 0, 3);
@@ -4244,7 +4260,8 @@ static int battle_calc_attack_skill_ratio(struct Damage* wd, struct block_list *
 		case KO_SETSUDAN:
 			skillratio += 100 * (skill_lv - 1);
 			RE_LVL_DMOD(100);
-			if(tsc && tsc->data[SC_SPIRIT])
+			// Bonus damage added when target is soul linked.
+			if(tsc && ( tsc->data[SC_SPIRIT] || tsc->data[SC_SOULGOLEM] || tsc->data[SC_SOULSHADOW] || tsc->data[SC_SOULFALCON] || tsc->data[SC_SOULFAIRY]))
 				skillratio += 200 * tsc->data[SC_SPIRIT]->val1;
 			break;
 		case KO_BAKURETSU:
@@ -5854,6 +5871,10 @@ struct Damage battle_calc_magic_attack(struct block_list *src,struct block_list 
 					MATK_ADD(sstatus->matk_min);
 				}
 
+				// Soul energy spheres adds MATK.
+					MATK_ADD(3*sd->soulball);
+				}
+
 				if (nk&NK_SPLASHSPLIT) { // Divide MATK in case of multiple targets skill
 					if (mflag>0)
 						ad.damage /= mflag;
@@ -6186,6 +6207,23 @@ struct Damage battle_calc_magic_attack(struct block_list *src,struct block_list 
 							RE_LVL_DMOD(100);
 						} else
 							skillratio += 10 + 20 * skill_lv;
+						break;
+					case SP_CURSEEXPLOSION:
+						if ( tsc && tsc->data[SC_CURSE] )
+							skillratio = 1500 + 200 * skill_lv;
+						else
+							skillratio = 400 + 100 * skill_lv;
+						break;
+					case SP_SPA:
+						skillratio = 500 + 250 * skill_lv;
+						RE_LVL_DMOD(100);
+						break;
+					case SP_SHA:
+						skillratio = 5 * skill_lv;
+						break;
+					case SP_SWHOO:
+						skillratio = 1100 + 200 * skill_lv;
+						RE_LVL_DMOD(100)
 						break;
 					case KO_KAIHOU:
 						if(sd && sd->spiritcharm_type != CHARM_TYPE_NONE && sd->spiritcharm > 0) {
@@ -6680,6 +6718,9 @@ struct Damage battle_calc_misc_attack(struct block_list *src,struct block_list *
 		case GN_HELLS_PLANT_ATK:
 			//[{( Hell Plant Skill Level x Casters Base Level ) x 10 } + {( Casters INT x 7 ) / 2 } x { 18 + ( Casters Job Level / 4 )] x ( 5 / ( 10 - Summon Flora Skill Level ))
 			md.damage = skill_lv * status_get_lv(src) * 10 + status_get_int(src) * 7 / 2 * (18 + (sd ? sd->status.job_level : 0) / 4) * 5 / (10 - (sd ? pc_checkskill(sd, AM_CANNIBALIZE) : 0));
+			break;
+		case SP_SOULEXPLOSION:
+			md.damage = tstatus->hp * (20 + 10 * skill_lv) / 100;
 			break;
 		case RL_B_TRAP:
 			// kRO 2014-02-12: Damage: Caster's DEX, Target's current HP, Skill Level

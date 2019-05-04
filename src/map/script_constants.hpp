@@ -1546,6 +1546,21 @@
 	export_constant(SC_DIMENSION);
 	export_constant(SC_DIMENSION1);
 	export_constant(SC_DIMENSION2);
+	
+	// Soul Reaper
+	export_constant(SC_SOULCOLLECT);
+	export_constant(SC_SOULREAPER);
+	export_constant(SC_SOULUNITY);
+	export_constant(SC_SOULSHADOW);
+	export_constant(SC_SOULFAIRY);
+	export_constant(SC_SOULFALCON);
+	export_constant(SC_SOULGOLEM);
+	export_constant(SC_SOULDIVISION);
+	export_constant(SC_SOULENERGY);
+	export_constant(SC_USE_SKILL_SP_SPA);
+	export_constant(SC_USE_SKILL_SP_SHA);
+	export_constant(SC_SP_SHA);
+	export_constant(SC_SOULCURSE);
 
 	/* status icons */
 	export_deprecated_constant2("SI_BLANK",-1);

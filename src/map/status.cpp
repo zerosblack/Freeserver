@@ -847,6 +847,17 @@ void initChangeTables(void)
 	add_sc( SJ_STAREMPEROR			, SC_SILENCE );
 	set_sc_with_vfx( SJ_GRAVITYCONTROL	, SC_GRAVITYCONTROL	, EFST_GRAVITYCONTROL		, SCB_NONE );
 
+	set_sc( SP_SOULGOLEM	, SC_SOULGOLEM		, EFST_SOULGOLEM	, SCB_DEF|SCB_MDEF );
+	set_sc( SP_SOULSHADOW	, SC_SOULSHADOW		, EFST_SOULSHADOW	, SCB_ASPD|SCB_CRI );
+	set_sc( SP_SOULFALCON	, SC_SOULFALCON		, EFST_SOULFALCON	, SCB_WATK|SCB_HIT );
+	set_sc( SP_SOULFAIRY	, SC_SOULFAIRY		, EFST_SOULFAIRY	, SCB_MATK );
+	set_sc( SP_SOULCURSE  , SC_SOULCURSE  , EFST_SOULCURSE  , SCB_SPEED);
+	set_sc( SP_SHA			, SC_SP_SHA			, EFST_SP_SHA		, SCB_SPEED );
+	set_sc( SP_SOULUNITY	, SC_SOULUNITY		, EFST_SOULUNITY	, SCB_NONE );
+	set_sc( SP_SOULDIVISION	, SC_SOULDIVISION	, EFST_SOULDIVISION	, SCB_NONE );
+	set_sc( SP_SOULREAPER	, SC_SOULREAPER		, EFST_SOULREAPER	, SCB_NONE );
+	set_sc( SP_SOULCOLLECT	, SC_SOULCOLLECT	, EFST_SOULCOLLECT	, SCB_NONE );
+
 	add_sc( KO_YAMIKUMO			, SC_HIDING		);
 	set_sc_with_vfx( KO_JYUMONJIKIRI	, SC_JYUMONJIKIRI	, EFST_KO_JYUMONJIKIRI	, SCB_NONE );
 	add_sc( KO_MAKIBISHI			, SC_STUN		);
@@ -1043,6 +1054,9 @@ void initChangeTables(void)
 	StatusIconChangeTable[SC_BANANA_BOMB_SITDOWN] = EFST_BANANA_BOMB_SITDOWN_POSTDELAY;
 	StatusIconChangeTable[SC_PROMOTE_HEALTH_RESERCH] = EFST_PROMOTE_HEALTH_RESERCH;
 	StatusIconChangeTable[SC_ENERGY_DRINK_RESERCH] = EFST_ENERGY_DRINK_RESERCH;
+
+	StatusIconChangeTable[SC_USE_SKILL_SP_SPA] = EFST_USE_SKILL_SP_SPA;
+	StatusIconChangeTable[SC_USE_SKILL_SP_SHA] = EFST_USE_SKILL_SP_SHA;
 
 	/* Genetics New Food Items Status Icons */
 	StatusIconChangeTable[SC_SAVAGE_STEAK] = EFST_SAVAGE_STEAK;
@@ -6180,6 +6194,8 @@ static unsigned short status_calc_watk(struct block_list *bl, struct status_chan
 		watk += watk * sc->data[SC_ANGRIFFS_MODUS]->val2/100;
 	if(sc->data[SC_ODINS_POWER])
 		watk += 40 + 30 * sc->data[SC_ODINS_POWER]->val1;
+	if(sc->data[SC_SOULFALCON])
+		watk += sc->data[SC_SOULFALCON]->val2;
 	if (sc->data[SC_FLASHCOMBO])
 		watk += sc->data[SC_FLASHCOMBO]->val2;
 	if (sc->data[SC_CATNIPPOWDER])
@@ -6221,6 +6237,8 @@ static unsigned short status_calc_ematk(struct block_list *bl, struct status_cha
 		matk += 50;
 	if(sc->data[SC_ODINS_POWER])
 		matk += 40 + 30 * sc->data[SC_ODINS_POWER]->val1; // 70 lvl1, 100lvl2
+	if(sc->data[SC_SOULFAIRY])
+		matk += sc->data[SC_SOULFAIRY]->val2;
 	if(sc->data[SC_MOONLITSERENADE])
 		matk += sc->data[SC_MOONLITSERENADE]->val3;
 	if(sc->data[SC_IZAYOI])
@@ -6346,6 +6364,8 @@ static signed short status_calc_critical(struct block_list *bl, struct status_ch
 		critical -= sc->data[SC__UNLUCKY]->val2;
 	if(sc->data[SC_BEYONDOFWARCRY])
 		critical += sc->data[SC_BEYONDOFWARCRY]->val3;
+	if(sc->data[SC_SOULSHADOW])
+		critical += 10 * sc->data[SC_SOULSHADOW]->val3;
 
 	return (short)cap_value(critical,10,SHRT_MAX);
 }
@@ -6374,6 +6394,8 @@ static signed short status_calc_hit(struct block_list *bl, struct status_change 
 		hit += sc->data[SC_CONCENTRATION]->val3;
 	if(sc->data[SC_INSPIRATION])
 		hit += 5 * sc->data[SC_INSPIRATION]->val1 + sc->data[SC_INSPIRATION]->val2 / 2;
+	if(sc->data[SC_SOULFALCON])
+		hit += sc->data[SC_SOULFALCON]->val3;
 	if(sc->data[SC_ADJUSTMENT])
 		hit -= 30;
 	if(sc->data[SC_INCREASING])
@@ -6581,6 +6603,8 @@ static defType status_calc_def(struct block_list *bl, struct status_change *sc, 
 		def += def * sc->data[SC_INCDEFRATE]->val1/100;
 	if(sc->data[SC_EARTH_INSIGNIA] && sc->data[SC_EARTH_INSIGNIA]->val1 == 2)
 		def += 50;
+	if( sc->data[SC_SOULGOLEM] )
+		def += sc->data[SC_SOULGOLEM]->val2;
 	if(sc->data[SC_ODINS_POWER])
 		def -= 20 * sc->data[SC_ODINS_POWER]->val1;
 	if( sc->data[SC_ANGRIFFS_MODUS] )
@@ -6739,6 +6763,8 @@ static defType status_calc_mdef(struct block_list *bl, struct status_change *sc,
 
 	if(sc->data[SC_EARTH_INSIGNIA] && sc->data[SC_EARTH_INSIGNIA]->val1 == 3)
 		mdef += 50;
+	if( sc->data[SC_SOULGOLEM] )
+		mdef += sc->data[SC_SOULGOLEM]->val3;
 	if(sc->data[SC_ENDURE] && !sc->data[SC_ENDURE]->val3) // It has been confirmed that Eddga card grants 1 MDEF, not 0, not 10, but 1.
 		mdef += (sc->data[SC_ENDURE]->val4 == 0) ? sc->data[SC_ENDURE]->val1 : 1;
 	if(sc->data[SC_STONEHARDSKIN])
@@ -6877,6 +6903,11 @@ static unsigned short status_calc_speed(struct block_list *bl, struct status_cha
 				val = max( val, sc->data[SC_DONTFORGETME]->val3 );
 			if( sc->data[SC_CURSE] )
 				val = max( val, 300 );
+			if (sc->data[SC_SOULCURSE]) {
+				if (status_bl_has_mode(bl,MD_STATUS_IMMUNE) || bl->type == BL_PC)	
+					val = max( val, 50 );
+				else val = max( val, 300 );
+			}
 			if( sc->data[SC_CHASEWALK] )
 				val = max( val, sc->data[SC_CHASEWALK]->val3 );
 			if( sc->data[SC_WEDDING] )
@@ -6909,6 +6940,8 @@ static unsigned short status_calc_speed(struct block_list *bl, struct status_cha
 				val = max( val, 25 );
 			if( sc->data[SC_BANDING_DEFENCE] )
 				val = max( val, sc->data[SC_BANDING_DEFENCE]->val1 ); // +90% walking speed.
+			if( sc->data[SC_SP_SHA] )
+				val = max( val, 50 );
 			if( sc->data[SC_ROCK_CRUSHER_ATK] )
 				val = max( val, sc->data[SC_ROCK_CRUSHER_ATK]->val2 );
 			if( sc->data[SC_POWER_OF_GAIA] )
@@ -6919,6 +6952,8 @@ static unsigned short status_calc_speed(struct block_list *bl, struct status_cha
 				val = max( val, 25 );
 			if( sc->data[SC_B_TRAP] )
 				val = max( val, sc->data[SC_B_TRAP]->val3 );
+			if( sc->data[SC_SP_SHA] )
+				val = max( val, 50 );
 			if (sc->data[SC_CATNIPPOWDER])
 				val = max(val, sc->data[SC_CATNIPPOWDER]->val3);
 			if (sc->data[SC_CREATINGSTAR])
@@ -7152,7 +7187,8 @@ static short status_calc_fix_aspd(struct block_list *bl, struct status_change *s
 		aspd -= sc->data[SC_MTF_ASPD2]->val1;
 	if (sc->data[SC_STARSTANCE])
 		aspd -= sc->data[SC_STARSTANCE]->val1 * 10;
-
+	if( sc->data[SC_SOULSHADOW] )
+		aspd -= 10 * sc->data[SC_SOULSHADOW]->val2;
 
 	return cap_value(aspd, 0, 2000); // Will be recap for proper bl anyway
 }
@@ -9118,6 +9154,7 @@ int status_change_start(struct block_list* src, struct block_list* bl,enum sc_ty
 			case SC_SPIDERWEB:
 			case SC_THORNSTRAP:
 			case SC_CREATINGSTAR
+			case SC_SP_SHA:
 				return 0;
 		}
 	}
@@ -9138,8 +9175,9 @@ int status_change_start(struct block_list* src, struct block_list* bl,enum sc_ty
 		if ((!undead_flag && status->race != RC_DEMON) || bl->type == BL_PC) {
 			if (sc->data[SC_STONE] && sc->opt1 == OPT1_STONE)
 				status_change_end(bl, SC_STONE, INVALID_TIMER);
-			if (sc->data[SC_CURSE]) {
+			if (sc->data[SC_CURSE] || sc->data[SC_SOULCURSE]) {
 					status_change_end(bl, SC_CURSE, INVALID_TIMER);
+					status_change_end(bl, SC_SOULCURSE, INVALID_TIMER);
 					return 1; // End Curse and do not give stat boost
 			}
 		}
@@ -9189,6 +9227,19 @@ int status_change_start(struct block_list* src, struct block_list* bl,enum sc_ty
 	case SC_MAXOVERTHRUST:
 	  	// Cancels Normal Overthrust. [Skotlex]
 		status_change_end(bl, SC_OVERTHRUST, INVALID_TIMER);
+		break;
+	case SC_SPIRIT:
+	case SC_SOULGOLEM:
+	case SC_SOULSHADOW:
+	case SC_SOULFALCON:
+	case SC_SOULFAIRY:
+		if ( sc->data[type] )
+			break;
+		status_change_end(bl, SC_SPIRIT, INVALID_TIMER);
+		status_change_end(bl, SC_SOULGOLEM, INVALID_TIMER);
+		status_change_end(bl, SC_SOULSHADOW, INVALID_TIMER);
+		status_change_end(bl, SC_SOULFALCON, INVALID_TIMER);
+		status_change_end(bl, SC_SOULFAIRY, INVALID_TIMER);
 		break;
 	case SC_MAGNIFICAT:
 		status_change_end(bl,SC_OFFERTORIUM,INVALID_TIMER);
@@ -9594,6 +9645,7 @@ int status_change_start(struct block_list* src, struct block_list* bl,enum sc_ty
 			case SC_LHZ_DUN_N3:
 			case SC_LHZ_DUN_N4:
 			case SC_FLASHKICK:
+			case SC_SOULUNITY:
 				break;
 			case SC_GOSPEL:
 				 // Must not override a casting gospel char.
@@ -11433,6 +11485,53 @@ int status_change_start(struct block_list* src, struct block_list* bl,enum sc_ty
 			val2 = 5 * val1;// Skill Damage Increase.
 			break;
 
+		case SC_SOULGOLEM: 
+#ifdef RENEWAL
+				val2 = 60 * val1;// DEF Increase
+#else
+				val2 = 60 * val1/10;// DEF Increase
+#endif
+			val3 = 15 + 5 * val1;// MDEF Increase
+			break;
+		case SC_SOULSHADOW:
+			val2 = (1 + val1) / 2;// ASPD Increase
+			val3 = 10 + 2 * val1;// CRIT Increase
+			break;
+		case SC_SOULFALCON:
+			val2 = 10 * val1;// WATK Increase
+			val3 = 10;// HIT Increase
+			if ( val1 >= 3 )
+				val3 += 3;
+			if ( val1 >= 5 )
+				val3 += 2;
+			if ( val1 >= 6 )// In case someone uses a level higher then 5.
+				val3 += val1-5;
+			break;
+		case SC_SOULFAIRY:
+			val2 = 10 * val1;// MATK Increase
+			val3 = 5;// Variable Cast Time Reduction
+			if ( val1 >= 3 )
+				val3 += 2;
+			if ( val1 >= 5 )
+				val3 += 3;
+			if ( val1 >= 6 )// In case someone uses a level higher then 5.
+				val3 += 4*(val1-5);
+			break;
+		case SC_SOULUNITY:
+			val4 = tick / 3000;
+			tick = 3000;
+			break;
+		case SC_SOULDIVISION:
+			val2 = 10 * val1;// Skill Aftercast Increase
+			break;
+		case SC_SOULREAPER:
+			val2 = 10 + 5 * val1;// Chance of Getting A Soul Sphere.
+			break;
+		case SC_SOULCOLLECT:
+			val2 = 5 + 3 * val2;// Max Soul Sphere's.
+			val3 = tick>0?tick:60000;
+			break;
+
 		default:
 			if( calc_flag == SCB_NONE && StatusSkillChangeTable[type] == -1 && StatusIconChangeTable[type] == EFST_BLANK ) {
 				// Status change with no calc, no icon, and no skill associated...?
@@ -11691,7 +11790,10 @@ int status_change_start(struct block_list* src, struct block_list* bl,enum sc_ty
 		case SC_WHITEIMPRISON:  sc->opt1 = OPT1_IMPRISON;	break;
 		// OPT2
 		case SC_POISON:       sc->opt2 |= OPT2_POISON;		break;
-		case SC_CURSE:        sc->opt2 |= OPT2_CURSE;		break;
+		case SC_CURSE:
+		case SC_SOULCURSE:
+			sc->opt2 |= OPT2_CURSE;	
+			break;
 		case SC_SILENCE:      sc->opt2 |= OPT2_SILENCE;		break;
 		case SC_SIGNUMCRUCIS: sc->opt2 |= OPT2_SIGNUMCRUCIS; break;
 		case SC_BLIND:        sc->opt2 |= OPT2_BLIND;		break;
@@ -12408,6 +12510,14 @@ int status_change_end_(struct block_list* bl, enum sc_type type, int tid, const 
 			}
 			break;
 
+		case SC_SOULUNITY:
+			{
+				struct block_list *d_bl = map_id2bl(sce->val1);
+				if( d_bl && d_bl->type == BL_PC )
+					((TBL_PC*)d_bl)->united_soul[sce->val2] = 0;
+			}
+			break;
+
 		case SC_BLADESTOP:
 			if(sce->val4) {
 				int tid2 = sce->val4; //stop the status for the other guy of bladestop as well
@@ -12831,6 +12941,10 @@ int status_change_end_(struct block_list* bl, enum sc_type type, int tid, const 
 		break;
 	case SC_SIGNUMCRUCIS:
 		sc->opt2 &= ~OPT2_SIGNUMCRUCIS;
+		break;
+	
+	case SC_SOULCURSE:
+		sc->opt2 &= ~OPT2_CURSE;
 		break;
 
 	case SC_HIDING:
@@ -13817,6 +13931,28 @@ TIMER_FUNC(status_change_timer){
 		// They only end by status_change_end
 		sc_timer_next(600000 + tick);
 		return 0;
+
+	case SC_SOULUNITY:
+		if( --(sce->val4) >= 0 )
+		{// Needed to check the caster's location for the range check.
+			struct block_list *unity_src = map_id2bl(sce->val1);
+
+			// End the status if out of range.
+			if ( !check_distance_bl(bl, unity_src, 11) )
+				break;
+
+			status_heal(bl, 150*sce->val3, 0, 2);
+			sc_timer_next(3000+tick);
+			return 0;
+		}
+		break;
+
+	case SC_SOULCOLLECT:
+		pc_addsoulball(sd, skill_get_time2(SP_SOULCOLLECT, sce->val1), sce->val2);
+		sc_timer_next(sce->val3+tick);
+		return 0;
+		break;	
+
 	case SC_MEIKYOUSISUI:
 		if( --(sce->val4) >= 0 ) {
 			status_heal(bl, status->max_hp * sce->val2 / 100, status->max_sp * sce->val3 / 100, 0);

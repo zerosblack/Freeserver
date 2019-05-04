@@ -1376,6 +1376,27 @@ static void clif_spiritcharm_single(int fd, struct map_session_data *sd)
 	WFIFOSET(fd, packet_len(0x08cf));
 }
 
+/// Notifies the client of an object's souls.
+/// Note: Spirit spheres and Soul spheres work on
+/// seprate systems officially, but both send out
+/// the same packet which leads to confusion on how
+/// much soul energy a Soul Reaper acturally has
+/// should the player also have spirit spheres.
+/// They will likely create a new packet for this soon
+/// to seprate the animations for spirit and soul spheres.
+/// For now well use this and replace it later when possible. [Rytech]
+/// 
+/// 01d0 <id>.L <amount>.W (ZC_SPIRITS)
+/// 01e1 <id>.L <amount>.W (ZC_SPIRITS2)
+static void clif_soulball_single(int fd, struct map_session_data *sd)
+{
+	WFIFOHEAD(fd, packet_len(0x1d0));
+	WFIFOW(fd,0)=0x1d0;
+	WFIFOL(fd,2)=sd->bl.id;
+	WFIFOW(fd,6)=sd->soulball;
+	WFIFOSET(fd, packet_len(0x1d0));
+}
+
 /*==========================================
  * Run when player changes map / refreshes
  * Tells its client to display all weather settings being used by this map
@@ -1465,6 +1486,8 @@ int clif_spawn(struct block_list *bl)
 
 			if (sd->spiritball > 0)
 				clif_spiritball(&sd->bl);
+			if (sd->soulball > 0)
+				clif_soulball(sd);	
 			if(sd->state.size==SZ_BIG) // tiny/big players [Valaris]
 				clif_specialeffect(bl,EF_GIANTBODY2,AREA);
 			else if(sd->state.size==SZ_MEDIUM)
@@ -4611,6 +4634,8 @@ static void clif_getareachar_pc(struct map_session_data* sd,struct map_session_d
 
 	if(dstsd->spiritball > 0)
 		clif_spiritball_single(sd->fd, dstsd);
+	if(dstsd->soulball > 0)
+		clif_soulball_single(sd->fd, dstsd);	
 	if (dstsd->spiritcharm_type != CHARM_TYPE_NONE && dstsd->spiritcharm > 0)
 		clif_spiritcharm_single(sd->fd, dstsd);
 	if( (sd->status.party_id && dstsd->status.party_id == sd->status.party_id) || //Party-mate, or hpdisp setting.
@@ -9440,6 +9465,8 @@ void clif_refresh(struct map_session_data *sd)
 	clif_updatestatus(sd,SP_LUK);
 	if (sd->spiritball)
 		clif_spiritball_single(sd->fd, sd);
+	if (sd->soulball)
+		clif_soulball_single(sd->fd, sd);	
 	if (sd->spiritcharm_type != CHARM_TYPE_NONE && sd->spiritcharm > 0)
 		clif_spiritcharm_single(sd->fd, sd);
 	if (sd->vd.cloth_color)
@@ -18464,6 +18491,29 @@ void clif_spiritcharm(struct map_session_data *sd) {
 	clif_send(buf, packet_len(0x08cf), &sd->bl, AREA);
 }
 
+/// Notifies clients in an area of an object's souls.
+/// Note: Spirit spheres and Soul spheres work on
+/// seprate systems officially, but both send out
+/// the same packet which leads to confusion on how
+/// much soul energy a Soul Reaper acturally has
+/// should the player also have spirit spheres.
+/// They will likely create a new packet for this soon
+/// to seprate the animations for spirit and soul spheres.
+/// For now well use this and replace it later when possible. [Rytech]
+/// 
+/// 01d0 <id>.L <amount>.W (ZC_SPIRITS)
+/// 01e1 <id>.L <amount>.W (ZC_SPIRITS2)
+void clif_soulball(struct map_session_data *sd)
+{
+	unsigned char buf[8];
+
+	nullpo_retv(sd);
+
+	WBUFW(buf,0)=0x1d0;
+	WBUFL(buf,2)=sd->bl.id;
+	WBUFW(buf,6)=sd->soulball;
+	clif_send(buf,packet_len(0x1d0),&sd->bl,AREA);
+}
 
 /// Move Item from or to Personal Tab (CZ_WHATSOEVER) [FE]
 /// 0907 <index>.W

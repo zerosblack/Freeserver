@@ -526,6 +526,102 @@ void pc_delspiritball(struct map_session_data *sd,int count,int type)
 	}
 }
 
+static int pc_soulball_timer(int tid, t_tick tick, int id, intptr data)
+{
+	struct map_session_data *sd;
+	int i;
+
+	if( (sd=(struct map_session_data *)map_id2sd(id)) == NULL || sd->bl.type!=BL_PC )
+		return 1;
+
+	if( sd->soulball <= 0 )
+	{
+		ShowError("pc_soulball_timer: %d soulball's available. (aid=%d cid=%d tid=%d)\n", sd->soulball, sd->status.account_id, sd->status.char_id, tid);
+		sd->soulball = 0;
+		return 0;
+	}
+
+	ARR_FIND(0, sd->soulball, i, sd->soul_timer[i] == tid);
+	if( i == sd->soulball )
+	{
+		ShowError("pc_soulball_timer: timer not found (aid=%d cid=%d tid=%d)\n", sd->status.account_id, sd->status.char_id, tid);
+		return 0;
+	}
+
+	sd->soulball--;
+	if( i != sd->soulball )
+		memmove(sd->soul_timer+i, sd->soul_timer+i+1, (sd->soulball-i)*sizeof(int));
+	sd->soul_timer[sd->soulball] = INVALID_TIMER;
+
+	clif_soulball(sd);
+
+	return 0;
+}
+
+void pc_addsoulball(struct map_session_data *sd,int interval,int max)
+{
+	int tid, i;
+
+	nullpo_retv(sd);
+
+	if(max > MAX_SOULBALL)
+		max = MAX_SOULBALL;
+	if(sd->soulball < 0)
+		sd->soulball = 0;
+
+	if( sd->soulball && sd->soulball >= max )
+	{
+		if(sd->soul_timer[0] != INVALID_TIMER)
+			delete_timer(sd->soul_timer[0],pc_soulball_timer);
+		sd->soulball--;
+		if( sd->soulball != 0 )
+			memmove(sd->soul_timer+0, sd->soul_timer+1, (sd->soulball)*sizeof(int));
+		sd->soul_timer[sd->soulball] = INVALID_TIMER;
+	}
+
+	tid = add_timer(gettick()+interval, pc_soulball_timer, sd->bl.id, 0);
+	ARR_FIND(0, sd->soulball, i, sd->soul_timer[i] == INVALID_TIMER || DIFF_TICK(get_timer(tid)->tick, get_timer(sd->soul_timer[i])->tick) < 0);
+	if( i != sd->soulball )
+		memmove(sd->soul_timer+i+1, sd->soul_timer+i, (sd->soulball-i)*sizeof(int));
+	sd->soul_timer[i] = tid;
+	sd->soulball++;
+	clif_soulball(sd);
+}
+
+void pc_delsoulball(struct map_session_data *sd,int count,int type)
+{
+	int i;
+
+	nullpo_retv(sd);
+
+	if(sd->soulball <= 0) {
+		sd->soulball = 0;
+		return;
+	}
+
+	if(count <= 0)
+		return;
+	if(count > sd->soulball)
+		count = sd->soulball;
+	sd->soulball -= count;
+	if(count > MAX_SOULBALL)
+		count = MAX_SOULBALL;
+
+	for(i=0;i<count;i++) {
+		if(sd->soul_timer[i] != INVALID_TIMER) {
+			delete_timer(sd->soul_timer[i],pc_soulball_timer);
+			sd->soul_timer[i] = INVALID_TIMER;
+		}
+	}
+	for(i=count;i<MAX_SOULBALL;i++) {
+		sd->soul_timer[i-count] = sd->soul_timer[i];
+		sd->soul_timer[i] = INVALID_TIMER;
+	}
+
+	if(!type)
+		clif_soulball(sd);
+}
+
 /**
 * Increases a player's fame points and displays a notice to him
 * @param sd Player
@@ -8089,9 +8185,21 @@ int pc_dead(struct map_session_data *sd,struct block_list *src)
 
 	if ( sd->spiritball !=0 )
 		pc_delspiritball(sd,sd->spiritball,0);
+	
+	if ( sd->soulball !=0 )
+		pc_delsoulball(sd,sd->soulball,0);
 
 	if (sd->spiritcharm_type != CHARM_TYPE_NONE && sd->spiritcharm > 0)
 		pc_delspiritcharm(sd,sd->spiritcharm,sd->spiritcharm_type);
+
+	for(k = 0; k < MAX_UNITED_SOULS; k++) {
+		if (sd->united_soul[k]){
+			struct map_session_data *usoulsd = map_id2sd(sd->united_soul[k]);
+			if (usoulsd)
+				status_change_end(&usoulsd->bl, SC_SOULUNITY, INVALID_TIMER);
+			sd->united_soul[k] = 0;
+		}
+	}
 
 	if (src)
 	switch (src->type) {
@@ -13221,6 +13329,7 @@ void do_init_pc(void) {
 	add_timer_func_list(pc_global_expiration_timer, "pc_global_expiration_timer");
 	add_timer_func_list(pc_expiration_timer, "pc_expiration_timer");
 	add_timer_func_list(pc_autotrade_timer, "pc_autotrade_timer");
+	add_timer_func_list(pc_soulball_timer, "pc_soulball_timer");
 
 	add_timer(gettick() + autosave_interval, pc_autosave, 0, 0);
 

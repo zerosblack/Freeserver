@@ -2933,6 +2933,7 @@ int unit_remove_map_(struct block_list *bl, clr_type clrtype, const char* file, 
 		status_change_end(bl, SC_SUHIDE, INVALID_TIMER);
 		status_change_end(bl, SC_NEWMOON, INVALID_TIMER);
 		status_change_end(bl, SC_FLASHKICK, INVALID_TIMER);
+		status_change_end(bl, SC_SOULUNITY, INVALID_TIMER);
 	}
 
 	switch( bl->type ) {
@@ -3248,6 +3249,7 @@ int unit_free(struct block_list *bl, clr_type clrtype)
 			pc_cleareventtimer(sd);
 			pc_inventory_rental_clear(sd);
 			pc_delspiritball(sd, sd->spiritball, 1);
+			pc_delsoulball(sd,sd->soulball,1);
 			pc_delspiritcharm(sd, sd->spiritcharm, sd->spiritcharm_type);
 
 			if( sd->st && sd->st->state != RUN ) {// free attached scripts that are waiting
