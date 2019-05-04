@@ -4375,22 +4375,35 @@ static int battle_calc_attack_skill_ratio(struct Damage* wd, struct block_list *
 			break;
 		case KO_JYUMONJIKIRI:
 			skillratio += -100 + 150 * skill_lv;
+			if (sc && sc->data[SC_KAGEMUSYA])
+				skillratio *= 120 / 100 ;
 			RE_LVL_DMOD(120);
 			if(tsc && tsc->data[SC_JYUMONJIKIRI])
 				skillratio += skill_lv * status_get_lv(src);
 			break;
 		case KO_HUUMARANKA:
-			skillratio += -100 + 150 * skill_lv + sstatus->agi + sstatus->dex + (sd ? pc_checkskill(sd,NJ_HUUMA) * 100 : 0);
+			skillratio += -100 + 150 * skill_lv + 2* sstatus->str + (sd ? pc_checkskill(sd,NJ_HUUMA) * 100 : 0);
+			if (sc && sc->data[SC_KAGEMUSYA])
+				skillratio *= 120 / 100 ;
+			RE_LVL_DMOD(120);
 			break;
+		case KO_HAPPOKUNAI:
+			skillratio += 200 + 60 * skill_lv;
+			if (sc && sc->data[SC_KAGEMUSYA])
+				skillratio *= 120 / 100 ;
+			break;	
 		case KO_SETSUDAN:
+			struct status_change_entry *sce;
 			skillratio += 100 * (skill_lv - 1);
-			RE_LVL_DMOD(100);
-			// Bonus damage added when target is soul linked.
-			if(tsc && ( tsc->data[SC_SPIRIT] || tsc->data[SC_SOULGOLEM] || tsc->data[SC_SOULSHADOW] || tsc->data[SC_SOULFALCON] || tsc->data[SC_SOULFAIRY]))
-				skillratio += 200 * tsc->data[SC_SPIRIT]->val1;
+			RE_LVL_DMOD(120);
+			if ( tsc && ((sce=tsc->data[SC_SPIRIT]) || (sce=tsc->data[SC_SOULGOLEM]) || (sce=tsc->data[SC_SOULSHADOW]) || 
+				(sce=tsc->data[SC_SOULFALCON]) || (sce=tsc->data[SC_SOULFAIRY])))// Bonus damage added when target is soul linked.
+				skillratio += 200 * sce->val1;// Deals higher damage depending on level of soul link.
 			break;
 		case KO_BAKURETSU:
 			skillratio += -100 + (sd ? pc_checkskill(sd,NJ_TOBIDOUGU) : 1) * (50 + sstatus->dex / 4) * skill_lv * 4 / 10;
+			if (sc && sc->data[SC_KAGEMUSYA])
+				skillratio *= 120 / 100 ;
 			RE_LVL_DMOD(120);
 			skillratio += 10 * (sd ? sd->status.job_level : 1);
 			break;
@@ -6106,12 +6119,12 @@ struct Damage battle_calc_magic_attack(struct block_list *src,struct block_list 
 					case NJ_KAENSIN:
 						skillratio -= 50;
 						if(sd && sd->spiritcharm_type == CHARM_TYPE_FIRE && sd->spiritcharm > 0)
-							skillratio += 10 * sd->spiritcharm;
+							skillratio += 20 * sd->spiritcharm;
 						break;
 					case NJ_BAKUENRYU:
 						skillratio += 50 + 150 * skill_lv;
 						if(sd && sd->spiritcharm_type == CHARM_TYPE_FIRE && sd->spiritcharm > 0)
-							skillratio += 15 * sd->spiritcharm;
+							skillratio += 100 * sd->spiritcharm;
 						break;
 					case NJ_HYOUSENSOU:
 #ifdef RENEWAL
@@ -6120,22 +6133,22 @@ struct Damage battle_calc_magic_attack(struct block_list *src,struct block_list 
 							skillratio += 2 * skill_lv;
 #endif
 						if(sd && sd->spiritcharm_type == CHARM_TYPE_WATER && sd->spiritcharm > 0)
-							skillratio += 5 * sd->spiritcharm;
+							skillratio += 20 * sd->spiritcharm;
 						break;
 					case NJ_HYOUSYOURAKU:
 						skillratio += 50 * skill_lv;
 						if(sd && sd->spiritcharm_type == CHARM_TYPE_WATER && sd->spiritcharm > 0)
-							skillratio += 25 * sd->spiritcharm;
+							skillratio += 100 * sd->spiritcharm;
 						break;
 					case NJ_RAIGEKISAI:
 						skillratio += 60 + 40 * skill_lv;
 						if(sd && sd->spiritcharm_type == CHARM_TYPE_WIND && sd->spiritcharm > 0)
-							skillratio += 15 * sd->spiritcharm;
+							skillratio += 20 * sd->spiritcharm;
 						break;
 					case NJ_KAMAITACHI:
 						skillratio += 100 * skill_lv;
 						if(sd && sd->spiritcharm_type == CHARM_TYPE_WIND && sd->spiritcharm > 0)
-							skillratio += 10 * sd->spiritcharm;
+							skillratio += 100 * sd->spiritcharm;
 						break;
 					case NJ_HUUJIN:
 #ifdef RENEWAL
