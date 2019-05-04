@@ -764,7 +764,7 @@ struct map_data {
 	std::vector<s_drop_list> drop_list;
 	uint32 zone; // zone number (for item/skill restrictions)
 	struct s_skill_damage damage_adjust; // Used for overall skill damage adjustment
-	std::vector<s_skill_damage> skill_damage; // Used for single skill damage adjustment
+	std::unordered_map<uint16, s_skill_damage> skill_damage; // Used for single skill damage adjustment
 	std::unordered_map<uint16, int> skill_duration;
 	struct s_global_damage_rate atk_rate; // Global Damage [Cydh]
 

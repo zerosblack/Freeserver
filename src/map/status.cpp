@@ -9502,7 +9502,7 @@ int status_change_start(struct block_list* src, struct block_list* bl,enum sc_ty
 			case SC_FRESHSHRIMP:
 			case SC_SPIDERWEB:
 			case SC_THORNSTRAP:
-			case SC_CREATINGSTAR
+			case SC_CREATINGSTAR:
 			case SC_SP_SHA:
 				return 0;
 		}
