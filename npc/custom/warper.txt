@@ -297,7 +297,7 @@ menu	"Abyss Lakes",D1, "Amatsu Dungeon",D2, "Anthell",D3,
 		"Louyang Dungeon",D24, "Magma Dungeon",D25, "Malangdo Dungeon",D26,
 		"Moscovia Dungeon",D27, "Nidhogg's Dungeon",D28, "Odin Temple",D29,
 		"Orc Dungeon",D30, "Payon Dungeon",D31, "Prontera Invasion",D45, "Pyramids",D32, "Rachel Sanctuary",D33, "Rock Ridge Dungeon",D46, 
-    	"Rudus Dungeon",D49, "Scaraba Hole",D34, "Sphinx",D35, "Sunken Ship",D36, "Thanatos Tower",D37,
+    	"Scaraba Hole",D34, "Sphinx",D35, "Sunken Ship",D36, "Thanatos Tower",D37,
     	"Thor Volcano",D38, "Toy Factory",D39, "Turtle Dungeon",D40, "Umbala Dungeon",D41, "Verus's Area",D43;
 
 D1: setarray @c[2],261,272,275,270,116,27;
@@ -339,7 +339,7 @@ D16: setarray @c[0],104,99,115,236,106,132,203,200;
 	 Disp("Geffen Dungeon",1,4); Pick("gef_dun",1);
 D17: setarray @c[2],370,304,199,29,104,25,150,15,157,287,147,15,258,255,108,291,171,283,68,277,156,7,12,7,133,271,224,274,14,70,150,14,148,144,104,32;
 	 Disp("Entrance:Castle 1:Castle 2:Chivalry 1:Chivalry 2:Churchyard:Culvert 1:Culvert 2:Culvert 3:Culvert 4:St. Abbey:Staircase Dungeon:Underground Cave 1:Underground Cave 2:Underground Prison 1:Underground Prison 2:Nightmare Glastheim 1:Nightmare Glastheim 2");
-	 Pick("","glast_01","gl_cas01","gl_cas02","gl_cas01_","gl_knt01","gl_knt02","gl_chyard","gl_sew01","gl_sew02","gl_sew03","gl_sew04","gl_church","gl_step","gl_dun01","gl_dun02","gl_prison","gl_prison1","gl_chyard_","gl_cas02_");
+	 Pick("","glast_01","gl_cas01","gl_cas02","gl_knt01","gl_knt02","gl_chyard","gl_sew01","gl_sew02","gl_sew03","gl_sew04","gl_church","gl_step","gl_dun01","gl_dun02","gl_prison","gl_prison1","gl_chyard_","gl_cas02_");
 D18: setarray @c[2],153,53,28,113,68,16;
 	 Disp("Gonryun Dungeon",1,3); Pick("gon_dun");
 D19: setarray @c[2],176,7,93,20,23,8;

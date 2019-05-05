@@ -18,8 +18,8 @@ prontera,171,185,4	script	เปลี่ยนชุดญี่ปุ่น	894,{
 		mes "[ช่างแต่งตัว]","ขอโทษด้วยนะ","เราสามารถเปลี่ยนรูปแบบได้ เฉพาะสายอาชีพปกติ";
 		close;
 	}
-	//menu "เปลี่ยนชุดญี่ปุ่น",JP_1,"เปลี่ยนสีชุดญี่ปุ่น",JP_2;
-	menu "เปลี่ยนชุดญี่ปุ่น",JP_1;
+	menu "เปลี่ยนชุดญี่ปุ่น",JP_1,"เปลี่ยนสีชุดญี่ปุ่น",JP_2;
+	//menu "เปลี่ยนชุดญี่ปุ่น",JP_1;
 	JP_1:
 		menu "ชุดปกติ",L_1,"ชุดญี่ปุ่น",L_2;
 		L_1:
@@ -31,7 +31,7 @@ prontera,171,185,4	script	เปลี่ยนชุดญี่ปุ่น	894,{
 		atcommand "@bodystyle 1";
 		set jpdress,1;
 		end;
-	/*JP_2:
+	JP_2:
 	setarray .@Styles[1],
 		3,
 		getbattleflag("max_hair_style"),
@@ -67,7 +67,7 @@ prontera,171,185,4	script	เปลี่ยนชุดญี่ปุ่น	894,{
 			setlook .@Look[.@s], .@Revert;
 			break;
 		}
-	} */
+	}
 OnPCLoginEvent:
 	if(jpdress == 1) {
 	atcommand "@bodystyle 1";
