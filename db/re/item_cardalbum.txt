@@ -369,6 +369,7 @@ IG_CardAlbum,4442,1		// Tatacho Card
 IG_CardAlbum,4443,2		// Aqua Elemental Card
 IG_CardAlbum,4444,2		// Draco Card
 IG_CardAlbum,4445,1		// Luciola Vespa Card
+IG_CardAlbum,4446,1		// Enhanced Skeleton Card
 IG_CardAlbum,4447,1		// Centipede Card
 IG_CardAlbum,4448,1		// Cornus Card
 IG_CardAlbum,4449,1		// Dark Shadow Card
@@ -412,6 +413,148 @@ IG_CardAlbum,4530,1		// Siorava Card
 IG_CardAlbum,4531,2		// Red Eruma Card
 IG_CardAlbum,4532,1		// Wild Rider Card
 IG_CardAlbum,4533,2		// Octopus Card
+IG_CardAlbum,4557,1		// Weakened Fenrir
+IG_CardAlbum,4567,1		// Alphocio Card
+IG_CardAlbum,4568,1		// Celia Card
+IG_CardAlbum,4569,1		// Chen Card
+IG_CardAlbum,4570,1		// Flamel Card
+IG_CardAlbum,4571,1		// Gertie Card
+IG_CardAlbum,4572,1		// Randel Card
+IG_CardAlbum,4573,1		// Trentini Card
+IG_CardAlbum,4575,1		// Soheon Card
+IG_CardAlbum,4577,1		// Elvira Card
+IG_CardAlbum,4579,1		// Warrior Lola Card
+IG_CardAlbum,4581,1		// Rudo Card
+IG_CardAlbum,4582,1		// Bungisgis Card
+IG_CardAlbum,4583,1		// Engkanto Card
+IG_CardAlbum,4584,1		// Manananggal Card
+IG_CardAlbum,4585,1		// Mangkukulam Card
+IG_CardAlbum,4586,1		// Tikbalang Card
+IG_CardAlbum,4587,1		// Tiyanak Card
+IG_CardAlbum,4588,1		// Wakwak Card
+IG_CardAlbum,4589,1		// Jejeling Card
+IG_CardAlbum,4593,1		// Menblatt Card
+IG_CardAlbum,4594,1		// Petal Card
+IG_CardAlbum,4595,1		// Cenere Card
+IG_CardAlbum,4596,1		// Antique Book Card
+IG_CardAlbum,4597,1		// Lichtern Blue Card
+IG_CardAlbum,4598,1		// Lichtern Green Card
+IG_CardAlbum,4599,1		// Lichtern Red Card
+IG_CardAlbum,4600,1		// Lichtern Yellow Card
+IG_CardAlbum,4605,1		// Undead Knight M Card
+IG_CardAlbum,4606,1		// Undead Knight F Card
+IG_CardAlbum,4607,1		// Faithful Manager Card
+IG_CardAlbum,4626,1		// Big Ben Card
+IG_CardAlbum,4627,1		// Big Bell Card
+IG_CardAlbum,4628,1		// Neo Punk Card
+IG_CardAlbum,4629,1		// Arc Elder Card
+IG_CardAlbum,4630,1		// Time Keeper Card
+IG_CardAlbum,4631,1		// Owl Viscount Card
+IG_CardAlbum,4632,1		// Owl Marquees Card
+IG_CardAlbum,4633,1		// Enchance AS Card
+IG_CardAlbum,4634,1		// Enchance SS Card
+IG_CardAlbum,4635,1		// Enchance Amdarais Card
+IG_CardAlbum,4637,1		// Immortal Corpse Card
+IG_CardAlbum,4638,1		// Watcher Card
+IG_CardAlbum,4639,1		// Taffy Card
+IG_CardAlbum,4640,1		// Frozen Wolf Card
+IG_CardAlbum,4641,1		// Zombie Guard Card
+IG_CardAlbum,4653,1		// N Arclouse Card
+IG_CardAlbum,4654,1		// N Mimic Card
+IG_CardAlbum,4655,1		// N Minotaur Card
+IG_CardAlbum,4656,1		// N Mummy Card
+IG_CardAlbum,4657,1		// N Ancient Mummy Card
+IG_CardAlbum,4658,1		// N Verit Card
+IG_CardAlbum,4659,3		// Eggring Card
+IG_CardAlbum,4660,3		// Scout Basilisk Card
+IG_CardAlbum,4661,1		// Charge Basilisk Card
+IG_CardAlbum,4663,3		// Leaf Lunatic Card
+IG_CardAlbum,4664,3		// Grass Fabre Card
+IG_CardAlbum,4665,3		// Wild Hornet Card
+IG_CardAlbum,4666,3		// Sweet Rodafrog Card
+IG_CardAlbum,4667,3		// Hunter Wolf Card
+IG_CardAlbum,4668,3		// Trance Spore Card
+IG_CardAlbum,4669,1		// Jungle Mandragora Card
+IG_CardAlbum,4670,1		// Fruit Pom Spider Card
+IG_CardAlbum,4684,1		// True Eremes Card
+IG_CardAlbum,4685,1		// True Magaretta Card
+IG_CardAlbum,4686,1		// True Kathyrne Card
+IG_CardAlbum,4687,1		// True Cecil Card
+IG_CardAlbum,4688,1		// True Howard Card
+IG_CardAlbum,4689,1		// True Seyren Card
+IG_CardAlbum,4690,1		// True Randel Card
+IG_CardAlbum,4691,1		// True Flamel Card
+IG_CardAlbum,4692,1		// True Celia Card
+IG_CardAlbum,4693,1		// True Chen Card
+IG_CardAlbum,4694,1		// True Gertie Card
+IG_CardAlbum,4695,1		// True Trentini Card
+IG_CardAlbum,4696,1		// True Alphoccio Card
+IG_CardAlbum,4698,1		// Step Card
+IG_CardAlbum,4699,1		// Lock Step Card
+IG_CardAlbum,27012,1	// Kick Step Card
+IG_CardAlbum,27013,1	// Kick Kick Card
+IG_CardAlbum,27014,1	// Green Cenere Card
+IG_CardAlbum,27015,1	// Repair Robot Turbo Card
+IG_CardAlbum,27016,1	// Exploration Rover Turbo Card
+IG_CardAlbum,27017,1	// Scrap Robot Card
+IG_CardAlbum,27018,1	// GC109 Card
+IG_CardAlbum,27019,1	// DR815 Card
+IG_CardAlbum,27026,1	// Fire Condor Card
+IG_CardAlbum,27027,1	// Fire Sandman Card
+IG_CardAlbum,27028,1	// Fire Frilldora Card
+IG_CardAlbum,27029,1	// Fire Golem Card
+IG_CardAlbum,27030,1	// Fulbuk Card
+IG_CardAlbum,27082,1	// Furious Nine Tails Card
+IG_CardAlbum,27083,1	// Hollow Bongun Card
+IG_CardAlbum,27084,1	// Hollow Sohee Card
+IG_CardAlbum,27085,1	// Hollow Munak Card
+IG_CardAlbum,27086,1	// Hollow Archer Skeleton Card
+IG_CardAlbum,27087,1	// Wizard of Veritas Card
+IG_CardAlbum,27088,1	// Fury Hero Card
+IG_CardAlbum,27107,1	// Playing Pere Card
+IG_CardAlbum,27108,1	// Singing Pere Card
+IG_CardAlbum,27109,1	// Jitterbug Card
+IG_CardAlbum,27120,1	// Iara Card
+IG_CardAlbum,27121,1	// Piranha Card
+IG_CardAlbum,27122,1	// Curupira Card
+IG_CardAlbum,27123,1	// Toucan Card
+IG_CardAlbum,27124,1	// Jaguar Card
+IG_CardAlbum,27124,1	// Headless Mule Card
+IG_CardAlbum,27147,1	// Human Kimera Card
+IG_CardAlbum,27148,1	// Material Kimera Card
+IG_CardAlbum,27149,1	// Heart Hunter Card
+IG_CardAlbum,27157,1	// Wood Goblin Card
+IG_CardAlbum,27158,1	// Les Card
+IG_CardAlbum,27159,1	// Uzhas Card
+IG_CardAlbum,27160,1	// Vavayaga Card
+IG_CardAlbum,27161,1	// Mavka Card
+IG_CardAlbum,27163,1	// Faceworm Card
+IG_CardAlbum,27165,1	// Dark Faceworm Card
+IG_CardAlbum,27166,1	// Faceworm Egg Card
+IG_CardAlbum,27167,1	// Faceworm Larva Card
+IG_CardAlbum,27168,1	// Elder Irene Card
+IG_CardAlbum,27169,1	// Payon Soldier Card
+IG_CardAlbum,27170,1	// Shotgun Buffalo Bandit Card
+IG_CardAlbum,27171,1	// Revolver Buffalo Bandit Card
+IG_CardAlbum,27172,1	// Scimitar Buffalo Bandit Card
+IG_CardAlbum,27173,1	// Elite Shotgun Buffalo Bandit Card
+IG_CardAlbum,27174,1	// Elite Revolver Buffalo Bandit Card
+IG_CardAlbum,27175,1	// Elite Scimitar Buffalo Bandit Card
+IG_CardAlbum,27176,1	// Brown Rat Card
+IG_CardAlbum,27177,1	// Marsh Arclouse Card
+IG_CardAlbum,27178,1	// Gaster Card
+IG_CardAlbum,27179,1	// Coyote Card
+IG_CardAlbum,27181,1	// Airship Card
+IG_CardAlbum,27183,1	// Gigantes Card
+IG_CardAlbum,31016,1	// Decorated Evil Tree Card
+IG_CardAlbum,31017,1	// Vicious Cookie Card
+IG_CardAlbum,31018,1	// Evil Dwelling Box Card
+IG_CardAlbum,31019,1	// Creepy Demon Card
+IG_CardAlbum,31020,1	// Malicious Baby Ghost Card
+IG_CardAlbum,31021,1	// Dancing Marionette Card
+IG_CardAlbum,31022,1	// Abandoned Teddy Bear Card
+IG_CardAlbum,27264,1	// Evil Shadow Card
+
 // Magic Card Album
 IG_MagicCardAlbum,4047,1	// Ghostring Card
 IG_MagicCardAlbum,4054,1	// Angeling Card
