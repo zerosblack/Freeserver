@@ -21480,15 +21480,23 @@ void clif_parse_refineui_refine( int fd, struct map_session_data* sd ){
 					break;
 				}
 				else if (r < (materials[i].cost.breaking + materials[i].cost.downrefine)) { // Downrefine chance
-					item->refine = cap_value(item->refine - materials[i].cost.downrefine_num, 0, MAX_REFINE);
-					clif_refine(fd, 2, index, item->refine);
-					clif_refineui_info(sd, index);
-					break;
+					if (item->refine == 10) {
+						clif_refine(fd, 3, index, item->refine);
+						clif_refineui_info(sd, index);
+					}
+					else {
+						item->refine = cap_value(item->refine - materials[i].cost.downrefine_num, 0, MAX_REFINE);
+						clif_refine(fd, 2, index, item->refine);
+						clif_refineui_info(sd, index);
+						break;
+					}
 				}
 			}
 			// Blacksmith Blessing were used, no break & no down refine
-			clif_refine(fd, 3, index, item->refine);
-			clif_refineui_info(sd, index);
+			else if (use_blacksmith_blessing) {
+				clif_refine(fd, 3, index, item->refine);
+				clif_refineui_info(sd, index);
+			}
 		} while (0);
 
 		clif_misceffect( &sd->bl, 2 );
