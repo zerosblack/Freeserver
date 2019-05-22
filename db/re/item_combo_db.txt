@@ -1179,6 +1179,12 @@
 32231:15388:15389,{ bonus bMaxHPrate,5; bonus bDelayrate,-5; }
 32232:15388:15389,{ bonus bAspdRate,3; bonus bCritical,7; }
 32233:15388:15389,{ bonus bLongAtkRate,7; bonus bAspd,1; }
+32204:2027,{ .@r = getequiprefinerycnt(EQI_HAND_R); bonus bInt,2*.@r; bonus2 bSkillAtk,"WL_CRIMSONROCK",.@r; if (.@r>=9) { bonus bMagicHPGainValue,500; bonus bHPGainValue,500; autobonus "{ bonus2 bMagicAtkEle,Ele_Fire,50; }",10,10000,BF_MAGIC,"{ specialeffect2 255; }"; } }
+32204:21018,{ .@r = getequiprefinerycnt(EQI_HAND_R); bonus bCritAtkRate,3*.@r; if (.@r>=9) { bonus bCritical,50; bonus2 bAddClass,Class_Boss,25; } }
+32204:28010,{ .@r = getequiprefinerycnt(EQI_HAND_R); bonus2 bAddClass,Class_All,5*.@r; if (.@r>=9) bonus4 bAutoSpellOnSkill,"GC_ROLLINGCUTTER","AB_ORATIO",10,100; }
+32222:15093,{ .@r = getequiprefinerycnt(EQI_ARMOR); bonus5 bAutoSpell,"AL_HEAL",10,-(50+.@r),BF_SHORT,0; bonus5 bAutoSpell,"WZ_STORMGUST",10,-(50+.@r),BF_SHORT,1; bonus2 bSkillAtk,"RK_STORMBLAST",5*.@r; bonus2 bSkillAtk,"LG_BANISHINGPOINT",5*.@r; }
+32222:15095,{ .@r = getequiprefinerycnt(EQI_ARMOR); bonus5 bAutoSpell,"PR_KYRIE",10,-(50+.@r),BF_SHORT,0; bonus5 bAutoSpell,"PR_LEXAETERNA",1,-(50+.@r),BF_MAGIC,1; bonus2 bSkillAtk,"AB_JUDEX",5*.@r; bonus2 bSkillAtk,"AB_ADORAMUS",5*.@r; bonus2 bSkillAtk,"SR_DRAGONCOMBO",5*.@r; bonus2 bSkillAtk,"SR_SKYNETBLOW",5*.@r; bonus2 bSkillAtk,"SR_EARTHSHAKER",5*.@r; }
+32222:15096,{ .@r = getequiprefinerycnt(EQI_ARMOR); bonus bAllStats,2*.@r; bonus3 bAddEff,Eff_Stun,(((26/10)*.@r)+(7/10))*100,ATF_SHORT; bonus3 bAddEff,Eff_Curse,(((26/10)*.@r)+(7/10))*100,ATF_SHORT; bonus3 bAddEff,Eff_Poison,(((26/10)*.@r)+(7/10))*100,ATF_SHORT; bonus3 bAddEff,Eff_Silence,(((26/10)*.@r)+(7/10))*100,ATF_SHORT; }
 32238:32239,{ bonus bVariableCastrate,-10; bonus bMatkRate,10;  }
 40210:2201,{ .@a = (readparam(bStr)+readparam(bLuk))/80; .@b = (readparam(bAgi)+readparam(bVit))/80; bonus bBaseAtk,50*.@a; bonus bHit,20*.@a; bonus bFlee,30*.@b; bonus bDelayrate,-10*.@b; }
 40210:2202,{ .@a = (readparam(bStr)+readparam(bLuk))/80; .@b = (readparam(bAgi)+readparam(bVit))/80; bonus bBaseAtk,50*.@a; bonus bHit,20*.@a; bonus bFlee,30*.@b; bonus bDelayrate,-10*.@b; }
