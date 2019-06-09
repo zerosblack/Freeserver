@@ -1104,6 +1104,7 @@ int skill_additional_effect(struct block_list* src, struct block_list *bl, uint1
 	struct status_change *sc, *tsc;
 	int skill;
 	int rate;
+	enum sc_type status;
 
 	nullpo_ret(src);
 	nullpo_ret(bl);
@@ -1538,7 +1539,7 @@ int skill_additional_effect(struct block_list* src, struct block_list *bl, uint1
 	case LK_JOINTBEAT:
 		status = status_skill2sc(skill_id);
 		if (tsc->jb_flag) {
-			sc_start4(src,bl,status,(5*skill_lv+5),skill_lv,tsc->jb_flag&BREAK_FLAGS,src->id,0,skill_get_time2(skill_id,skill_lv));
+			sc_start4(src, bl, status, (5 * skill_lv + 5), skill_lv, tsc->jb_flag&BREAK_FLAGS, src->id, 0, skill_get_time2(skill_id, skill_lv));
 			tsc->jb_flag = 0;
 		}
 		break;
