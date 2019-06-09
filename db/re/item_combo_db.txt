@@ -1143,7 +1143,7 @@
 24251:24247:24271:24258:24303:24290,{ bonus bAllStats,10; bonus bMaxHPrate,5; bonus bMaxSPrate,5; bonus2 bIgnoreDefClassRate,Class_Normal,50; bonus2 bIgnoreMDefClassRate,Class_Normal,50; }
 24252:24248:24260:24273:24292:24305,{ bonus bAllStats,10; bonus bMaxHPrate,5; bonus bMaxSPrate,5; bonus2 bIgnoreDefClassRate,Class_Normal,50; bonus2 bIgnoreMDefClassRate,Class_Normal,50; }
 24252:24248:24261:24274:24293:24306,{ bonus bAllStats,10; bonus bMaxHPrate,5; bonus bMaxSPrate,5; bonus2 bIgnoreDefClassRate,Class_Normal,50; bonus2 bIgnoreMDefClassRate,Class_Normal,50; }
-24253:28391,{ .@val = 1; if ((getequiprefinerycnt(EQI_SHADOW_ACC_L)+getequiprefinerycnt(EQI_SHADOW_ACC_R)) >= 10) { .@val += 2; } bonus2 bAddClass,Class_All,.@val; bonus bMaxHPrate,.@val; }
+24253:28391,{ bonus2 bAddRace,RC_All,1; bonus bMaxHPrate,1; if (getequiprefinerycnt(EQI_SHADOW_ACC_R)+getequiprefinerycnt(EQI_SHADOW_ACC_L)>=10) { bonus2 bAddRace,RC_All,2; bonus bMaxHPrate,2; } }
 24253:28391:24262:24275:24294:24307,{ bonus bAllStats,10; bonus bMaxHPrate,5; bonus bMaxSPrate,5; bonus2 bIgnoreDefClassRate,Class_Normal,50; bonus2 bIgnoreMDefClassRate,Class_Normal,50; }
 24253:28391:24263:24276:24295:24308,{ bonus bAllStats,10; bonus bMaxHPrate,5; bonus bMaxSPrate,5; bonus2 bIgnoreDefClassRate,Class_Normal,50; bonus2 bIgnoreMDefClassRate,Class_Normal,50; }
 24254:24249:24264:24277:24296:24309,{ bonus bAllStats,10; bonus bMaxHPrate,5; bonus bMaxSPrate,5; bonus2 bIgnoreDefClassRate,Class_Normal,50; bonus2 bIgnoreMDefClassRate,Class_Normal,50; }
@@ -1176,6 +1176,7 @@
 24396:24397:24398,{ .@r = getequiprefinerycnt(EQI_SHADOW_ARMOR) + getequiprefinerycnt(EQI_SHADOW_SHIELD) + getequiprefinerycnt(EQI_SHADOW_SHOES); bonus bMatk,.@r*2; if (.@r >= 25) { bonus bMatkRate,5; } else if (.@r >= 23) { bonus bMatkRate,2; } }
 24399:24400,{ .@r = getequiprefinerycnt(EQI_SHADOW_SHIELD) + getequiprefinerycnt(EQI_SHADOW_SHOES); if (.@r >= 16) { bonus bDef,100; bonus bMaxHPrate,4; bonus bMaxSPrate,4; } else { bonus bDef,50; bonus bMaxHPrate,2; bonus bMaxSPrate,2; } }
 24416:24417:24418:24419:24420:24421,{ bonus bAspd,2; bonus bVariableCastrate,-10; bonus2 bIgnoreDefRaceRate,RC_All,70; bonus2 bIgnoreMdefRaceRate,RC_All,70; bonus2 bIgnoreDefRaceRate,RC_Player,-70; bonus2 bIgnoreMdefRaceRate,RC_Player,-70; }
+24255:28392,{ bonus2 bAddRace,RC_All,1; bonus bMaxHPrate,1; if (getequiprefinerycnt(EQI_SHADOW_ACC_R)+getequiprefinerycnt(EQI_SHADOW_ACC_L)>=10) { bonus2 bAddRace,RC_All,2; bonus bMaxHPrate,2; } }
 27101:28510,{ bonus bMatkRate,(getrefine()/3); }
 27102:28510,{ bonus bFlee2,5; }
 27103:28510,{ bonus2 bAddClass,Class_All,(getrefine()/3); }
