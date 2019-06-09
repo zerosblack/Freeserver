@@ -4490,24 +4490,6 @@ int status_calc_pc_sub(struct map_session_data* sd, enum e_status_calc_opt opt)
 			sd->magic_addele[ELE_WATER] += sc->data[SC_WATERWEAPON]->val1;
 		if (sc->data[SC_EARTHWEAPON])
 			sd->magic_addele[ELE_EARTH] += sc->data[SC_EARTHWEAPON]->val1;
-
-		// Ninja Rebalance
-		if(sd && sd->spiritcharm_type == CHARM_TYPE_FIRE && sd->spiritcharm == 10) {
-			sd->right_weapon.addele[ELE_EARTH] += 30;
-            sd->left_weapon.addele[ELE_EARTH] += 30;
-		}
-		if(sd && sd->spiritcharm_type == CHARM_TYPE_WATER && sd->spiritcharm == 10) {
-			sd->right_weapon.addele[ELE_FIRE] += 30;
-            sd->left_weapon.addele[ELE_FIRE] += 30;
-		}
-		if(sd && sd->spiritcharm_type == CHARM_TYPE_LAND && sd->spiritcharm == 10) {
-			sd->right_weapon.addele[ELE_WIND] += 30;
-            sd->left_weapon.addele[ELE_WIND] += 30;
-		}
-		if(sd && sd->spiritcharm_type == CHARM_TYPE_WIND && sd->spiritcharm == 10) {
-			sd->right_weapon.addele[ELE_WATER] += 30;
-            sd->left_weapon.addele[ELE_WATER] += 30;
-		}
 #endif
 		if(sc->data[SC_PROVIDENCE]) {
 			sd->subele[ELE_HOLY] += sc->data[SC_PROVIDENCE]->val2;
