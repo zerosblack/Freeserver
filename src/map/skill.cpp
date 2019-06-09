@@ -6405,41 +6405,15 @@ static int skill_apply_songs(struct block_list* target, va_list ap)
 		switch (skill_id) {
 			// Attack type songs
 		case BA_DISSONANCE:
-			clif_specialeffect(src, 843, AREA); // White
-			clif_specialeffect(target, 877, AREA); // White
 			skill_attack(BF_MAGIC, src, src, target, skill_id, skill_lv, tick, 0);
 			return 1;
 		case DC_UGLYDANCE:
-			clif_specialeffect(src, 843, AREA); // White
-			clif_specialeffect(target, 877, AREA); // White
 		case BD_LULLABY:
-			clif_specialeffect(src, 842, AREA); // Yellow
-			clif_specialeffect(target, 867, AREA); // Yellow
 			return skill_additional_effect(src, target, skill_id, skill_lv, BF_LONG | BF_SKILL | BF_MISC, ATK_DEF, tick);
 		default: // Buff/Debuff type songs
 			if (skill_id == CG_HERMODE) {
 				if (src->id != target->id)
 					status_change_clear_buffs(target, SCCB_BUFFS); // Should dispell only allies.
-			}
-			if (skill_id == BA_POEMBRAGI) {
-				clif_specialeffect(src, 843, AREA); // White
-				clif_specialeffect(target, 877, AREA); // White
-			}
-			else if (skill_id == BA_WHISTLE || skill_id == DC_SERVICEFORYOU || skill_id == BD_ROKISWEIL) {
-				clif_specialeffect(src, 840, AREA); // Red
-				clif_specialeffect(target, 871, AREA); // Red
-			}
-			else if (skill_id == BD_ETERNALCHAOS || skill_id == BA_ASSASSINCROSS || skill_id == DC_FORTUNEKISS) {
-				clif_specialeffect(src, 844, AREA); // Purple
-				clif_specialeffect(target, 873, AREA); // Purple
-			}
-			else if (skill_id == DC_HUMMING || skill_id == BA_APPLEIDUN || skill_id == DC_DONTFORGETME) {
-				clif_specialeffect(src, 841, AREA); // Green
-				clif_specialeffect(target, 861, AREA); // Green
-			}
-			else {
-				clif_specialeffect(src, 842, AREA); // Yellow
-				clif_specialeffect(target, 867, AREA); // Yellow
 			}
 			return sc_start4(src, target, status_skill2sc(skill_id), 100, skill_id, val2, val3, 0, skill_get_time(skill_id, skill_lv));
 		}
@@ -6541,7 +6515,7 @@ static int skill_castend_song(struct block_list* src, uint16 skill_id, uint16 sk
 
 	if (skill_get_inf2(skill_id) & INF2_ENSEMBLE_SKILL) {
 		sc_start(src, src, status_skill2sc(CG_SPECIALSINGER), 100, 1, skill_get_time(CG_SPECIALSINGER, skill_lv));
-		skill_check_pc_partner(sd, skill_id, &skill_lv, 4, 1);
+		skill_check_pc_partner(sd, skill_id, &skill_lv, 3, 1);
 		// todo, apply ensemble fatigue if it hits you + ensemble partner.. ??
 		// or maybe we do that in skill_check_pc_partner or something ??
 	}
@@ -7142,6 +7116,9 @@ int skill_castend_nodamage_id (struct block_list *src, struct block_list *bl, ui
 	case LK_PARRYING:
 	case MS_PARRYING:
 	case LK_CONCENTRATION:
+#ifdef RENEWAL
+	case HP_BASILICA:
+#endif
 	case WS_CARTBOOST:
 	case SN_SIGHT:
 	case WS_MELTDOWN:
@@ -7207,15 +7184,6 @@ int skill_castend_nodamage_id (struct block_list *src, struct block_list *bl, ui
 		clif_skill_nodamage(src,bl,skill_id,skill_lv,
 			sc_start(src,bl,type,100,skill_lv,skill_get_time(skill_id,skill_lv)));
 		break;
-
-#ifdef RENEWAL
-	case HP_BASILICA:
-		clif_skill_nodamage(src,bl,skill_id,skill_lv,
-			sc_start(src,bl,type,100,skill_lv,skill_get_time(skill_id,skill_lv)));
-		clif_specialeffect(bl, EF_ITEM_LIGHT, AREA);
-		break;
-#endif
-
 	case SJ_GRAVITYCONTROL:
 	{
 		int fall_damage = (sstatus->batk + sstatus->rhw.atk) - tstatus->def2;
@@ -15595,15 +15563,9 @@ int skill_check_pc_partner(struct map_session_data *sd, uint16 skill_id, uint16 
 				if( is_chorus )
 					break;//Chorus skills are not to be parsed as ensembles
 				if (skill_get_inf2(skill_id)&INF2_ENSEMBLE_SKILL) {
-#ifdef RENEWAL						
-					if (c > 0 && sd->sc.data[SC_LONGING] && (tsd = map_id2sd(p_sd[0])) != NULL) {
-						sd->sc.data[SC_LONGING]->val1 = tsd->bl.id;
-						sc_start(&sd->bl,&tsd->bl, status_skill2sc(CG_SPECIALSINGER), 100, 1, 10000);
-#else
 					if (c > 0 && sd->sc.data[SC_DANCING] && (tsd = map_id2sd(p_sd[0])) != NULL) {
 						sd->sc.data[SC_DANCING]->val4 = tsd->bl.id;
-						sc_start4(&sd->bl,&tsd->bl,SC_DANCING,100,skill_id,sd->sc.data[SC_DANCING]->val2,*skill_lv,sd->bl.id,skill_get_time(skill_id,*skill_lv)+1000);	
-#endif					
+						sc_start4(&sd->bl,&tsd->bl,SC_DANCING,100,skill_id,sd->sc.data[SC_DANCING]->val2,*skill_lv,sd->bl.id,skill_get_time(skill_id,*skill_lv)+1000);
 						clif_skill_nodamage(&tsd->bl, &sd->bl, skill_id, *skill_lv, 1);
 						tsd->skill_id_dance = skill_id;
 						tsd->skill_lv_dance = *skill_lv;
@@ -15858,7 +15820,7 @@ bool skill_check_condition_castbegin(struct map_session_data* sd, uint16 skill_i
 		}
 	}
 	else if(inf2&INF2_ENSEMBLE_SKILL) {
-	    if (skill_check_pc_partner(sd, skill_id, &skill_lv, 4, 0) < 1) {
+	    if (skill_check_pc_partner(sd, skill_id, &skill_lv, 1, 0) < 1) {
 		    clif_skill_fail(sd,skill_id,USESKILL_FAIL_LEVEL,0);
 		    return false;
 	    }
@@ -16039,38 +16001,12 @@ bool skill_check_condition_castbegin(struct map_session_data* sd, uint16 skill_i
 			}
 			break;
 #endif
-
-		case BD_LULLABY:
-		case BD_RICHMANKIM:
-		case BD_ETERNALCHAOS:
-		case BD_DRUMBATTLEFIELD:
-		case BD_RINGNIBELUNGEN:
-		case BD_ROKISWEIL:
-		case BD_INTOABYSS:
-		case BD_SIEGFRIED:
-		case BA_DISSONANCE:
-		case BA_POEMBRAGI:
-		case BA_WHISTLE:
-		case BA_ASSASSINCROSS:
-		case BA_APPLEIDUN:
-		case DC_UGLYDANCE:
-		case DC_HUMMING:
-		case DC_DONTFORGETME:
-		case DC_FORTUNEKISS:
-		case DC_SERVICEFORYOU:
-			if((sc && sc->data[SC_LONGING])) {
-				clif_skill_fail(sd,skill_id,USESKILL_FAIL_LEVEL,0);
-				return false;
-			}
-			break;
-
 		case PR_BENEDICTIO:
 			if (skill_check_pc_partner(sd, skill_id, &skill_lv, 1, 0) < 2) {
 				clif_skill_fail(sd,skill_id,USESKILL_FAIL_LEVEL,0);
 				return false;
 			}
 			break;
-
 		case SL_SMA:
 			if(sc && !(sc->data[SC_SMA] || sc->data[SC_USE_SKILL_SP_SHA]))
 				return false;

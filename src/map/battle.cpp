@@ -3524,10 +3524,6 @@ static void battle_calc_multi_attack(struct Damage* wd, struct block_list *src,s
 			if( tsc && tsc->data[SC_JYUMONJIKIRI] )
 				wd->div_ = wd->div_ * -1;// needs more info
 			break;
-		case RG_BACKSTAP:
-			if (sd && sd->status.weapon == W_DAGGER)
-				wd->div_ = 2;
-			break;	
 	}
 }
 
@@ -3725,10 +3721,10 @@ static int battle_calc_attack_skill_ratio(struct Damage* wd, struct block_list *
 				skillratio += (200 + 40 * skill_lv) / 2;
 			else
 				skillratio += 200 + 40 * skill_lv;
-/*#ifdef RENEWAL
+#ifdef RENEWAL
 			if (sd && sd->status.weapon == W_DAGGER)
 				skillratio *= 2;
-#endif*/
+#endif
 			break;
 		case RG_RAID:
 #ifdef RENEWAL
@@ -3762,66 +3758,60 @@ static int battle_calc_attack_skill_ratio(struct Damage* wd, struct block_list *
 #endif
 				skillratio += 35 * skill_lv;
 			break;
-#ifdef RENEWAL
 		case AM_DEMONSTRATION:
-			skillratio += -100 + 100 * skill_lv + ((sd) ? pc_checkskill(sd, AM_LEARNINGPOTION) : 1) * 20;
-#else
 			skillratio += 20 * skill_lv;
-#endif
 			break;
 		case AM_ACIDTERROR:
 #ifdef RENEWAL
-			skillratio += -100 + 200 * skill_lv + ((sd) ? pc_checkskill(sd, AM_LEARNINGPOTION) : 1) * 20;
+			skillratio += -100 + 200 * skill_lv;
+			if (sd && pc_checkskill(sd, AM_LEARNINGPOTION))
+				skillratio += 100; // !TODO: What's this bonus increase?
 #else
 			skillratio += 40 * skill_lv;
 #endif
 			break;
 		case MO_FINGEROFFENSIVE:
-#ifdef RENEWAL		
-			if (tsc && (tsc->data[SC_BLADESTOP] || tsc->data[SC_BLADESTOP_WAIT]))
-				skillratio += 750 + 300 * skill_lv;
-			else
-				skillratio += 500 + 200 * skill_lv;
+#ifdef RENEWAL
+			skillratio += 500 + skill_lv * 2;
+			if (tsc && tsc->data[SC_BLADESTOP])
+				skillratio += skillratio / 2;
 #else
 			skillratio += 50 * skill_lv;
-#endif			
+#endif
 			break;
 		case MO_INVESTIGATE:
-#ifdef RENEWAL		
-			if (tsc && (tsc->data[SC_BLADESTOP] || tsc->data[SC_BLADESTOP_WAIT]))
-				skillratio += -100 + 150* skill_lv;
-			else skillratio += -100 + 100* skill_lv;
+#ifdef RENEWAL
+			skillratio += -100 + 100 * skill_lv;
+			if (tsc && tsc->data[SC_BLADESTOP])
+				skillratio += skillratio / 2;
 #else
 			skillratio += 75 * skill_lv;
-#endif			
+#endif
 			break;
-		case MO_EXTREMITYFIST:		
-			skillratio += 100 * (7 + sstatus->sp / 10);
+		case MO_EXTREMITYFIST:
 #ifdef RENEWAL
 			if (wd->miscflag&1)
-				skillratio *= 2; // More than 5 spirit balls active
-#endif				
+				skillratio += 100; // More than 5 spirit balls active
+#endif
+			skillratio += 100 * (7 + sstatus->sp / 10);
 			skillratio = min(500000,skillratio); //We stop at roughly 50k SP for overflow protection
 			break;
 		case MO_TRIPLEATTACK:
 			skillratio += 20 * skill_lv;
 			break;
 		case MO_CHAINCOMBO:
-#ifdef RENEWAL		
-			if (sd && sd->status.weapon == W_KNUCKLE)
-				skillratio += 2 * (150 + 50 * skill_lv);
-			else
-				skillratio += 150 + 50 * skill_lv;
+#ifdef RENEWAL
+			skillratio += 150 + 50 * skill_lv;
 #else
 			skillratio += 50 + 50 * skill_lv;
-#endif			
+#endif
 			break;
 		case MO_COMBOFINISH:
 #ifdef RENEWAL
 			skillratio += 450 + 50 * skill_lv + sstatus->str; // !TODO: How does STR play a role?
 #else
 			skillratio += 140 + 60 * skill_lv;
-#endif			
+#endif
 			break;
 		case BA_MUSICALSTRIKE:
 		case DC_THROWARROW:
@@ -3849,7 +3839,7 @@ static int battle_calc_attack_skill_ratio(struct Damage* wd, struct block_list *
 			break;
 		case CH_PALMSTRIKE:
 #ifdef RENEWAL
-			skillratio += 100 + 100 * skill_lv + sstatus->str; // !TODO: How does STR play a role?
+			skillratio += 100 + 100 * skill_lv; // !TODO: How does STR play a role?
 			RE_LVL_DMOD(100);
 #else
 			skillratio += 100 + 100 * skill_lv;
@@ -5719,23 +5709,13 @@ static struct Damage battle_calc_weapon_attack(struct block_list *src, struct bl
 		return wd; //Enough, rest is not needed.
 
 #ifdef RENEWAL
-	if (is_attack_critical(&wd, src, target, skill_id, skill_lv, false)) {
-		if (skill_id == SN_SHARPSHOOTING || skill_id == MA_SHARPSHOOTING) {
-			if (sd) { //Check for player so we don't crash out, monsters don't have bonus crit rates [helvetica]
-				wd.damage = (int)floor((float)((wd.damage * 140) / 100 * (100 + sd->bonus.crit_atk_rate)) / 100);
-				if (is_attack_left_handed(src, skill_id))
-					wd.damage2 = (int)floor((float)((wd.damage2 * 140) / 100 * (100 + sd->bonus.crit_atk_rate)) / 100);
-			} else
-				wd.damage = (int)floor((float)(wd.damage * 140) / 100);
-		}
-		if (!skill_id) {
-			if (sd) { //Check for player so we don't crash out, monsters don't have bonus crit rates [helvetica]
-				wd.damage = (int)floor((float)((wd.damage * 140) / 100 * (100 + sd->bonus.crit_atk_rate)) / 100);
-				if (is_attack_left_handed(src, skill_id))
-					wd.damage2 = (int)floor((float)((wd.damage2 * 140) / 100 * (100 + sd->bonus.crit_atk_rate)) / 100);
-			} else
-				wd.damage = (int)floor((float)(wd.damage * 140) / 100);
-		}
+	if (!skill_id && is_attack_critical(&wd, src, target, skill_id, skill_lv, false)) {
+		if (sd) { //Check for player so we don't crash out, monsters don't have bonus crit rates [helvetica]
+			wd.damage = (int)floor((float)((wd.damage * 140) / 100 * (100 + sd->bonus.crit_atk_rate)) / 100);
+			if (is_attack_left_handed(src, skill_id))
+				wd.damage2 = (int)floor((float)((wd.damage2 * 140) / 100 * (100 + sd->bonus.crit_atk_rate)) / 100);
+		} else
+			wd.damage = (int)floor((float)(wd.damage * 140) / 100);
 	}
 #endif
 
@@ -6265,7 +6245,7 @@ struct Damage battle_calc_magic_attack(struct block_list *src,struct block_list 
 						break;
 					case WZ_VERMILION:
 						if(sd)
-							skillratio += -100 + 400 + 100 * skill_lv;
+							skillratio += 25 + skill_lv * 5;
 						else
 							skillratio += 20 * skill_lv - 20; //Monsters use old formula
 						break;

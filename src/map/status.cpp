@@ -649,7 +649,7 @@ void initChangeTables(void)
 	add_sc( WS_CARTTERMINATION	, SC_STUN		);
 	set_sc( WS_OVERTHRUSTMAX	, SC_MAXOVERTHRUST	, EFST_OVERTHRUSTMAX, SCB_NONE );
 #ifdef RENEWAL
-	set_sc( CG_SPECIALSINGER	, SC_LONGING		, EFST_ENSEMBLEFATIGUE	, SCB_SPEED|SCB_ASPD );
+	set_sc( CG_SPECIALSINGER	, SC_LONGING		, EFST_ENSEMBLEFATIGUE	, SCB_NONE );
 #else
 	set_sc( CG_LONGINGFREEDOM	, SC_LONGING		, EFST_LONGING		, SCB_SPEED|SCB_ASPD );
 #endif
@@ -7197,9 +7197,7 @@ static unsigned short status_calc_speed(struct block_list *bl, struct status_cha
 			// Longing for Freedom cancels song/dance penalty
 			if( sc->data[SC_LONGING] )
 				val = max( val, 50 - 10 * sc->data[SC_LONGING]->val1 );
-#else
-			if( sc->data[SC_LONGING] )
-				val = 70;
+			else
 #endif
 			if( sd && sc->data[SC_DANCING] )
 				val = max( val, 500 - (40 + 10 * (sc->data[SC_SPIRIT] && sc->data[SC_SPIRIT]->val2 == SL_BARDDANCER)) * pc_checkskill(sd,(sd->status.sex?BA_MUSICALLESSON:DC_DANCINGLESSON)) );
@@ -7407,11 +7405,9 @@ static short status_calc_aspd(struct block_list *bl, struct status_change *sc, b
 	} else {
 		if (sc->data[SC_DONTFORGETME])
 			bonus -= sc->data[SC_DONTFORGETME]->val2 / 10;
-		if (sc->data[SC_LONGING])
 #ifndef RENEWAL
+		if (sc->data[SC_LONGING])
 			bonus -= sc->data[SC_LONGING]->val2 / 10;
-#else
-			bonus -= 30;
 #endif
 		if (sc->data[SC_STEELBODY])
 			bonus -= 25;
