@@ -1544,13 +1544,13 @@ int64 battle_calc_damage(struct block_list *src,struct block_list *bl,struct Dam
 		if( sc->data[SC_INVINCIBLE] && !sc->data[SC_INVINCIBLEOFF] )
 			damage += damage * 75 / 100;
  
-		/*if ( sce = sc->data[SC_SOULREAPER]){
+		if ( sce = sc->data[SC_SOULREAPER]){
 			struct map_session_data *src_sd = (struct map_session_data *)src;
 			if( src_sd && rand()%100 < sce->val2){
 				clif_specialeffect(src, 1208, AREA);
-				pc_addspiritball(src_sd, skill_get_time2(SP_SOULREAPER, sce->val1), 5+3*pc_checkskill(src_sd, SP_SOULENERGY));
+				pc_addsoulball(src_sd, skill_get_time2(SP_SOULCOLLECT, sce->val1), 5+3*pc_checkskill(src_sd, SP_SOULENERGY));
 			}
-		}*/
+		}
 
 		if ((sce = sc->data[SC_BLOODLUST]) && flag&BF_WEAPON && damage > 0 && rnd()%100 < sce->val3)
 			status_heal(src, damage * sce->val4 / 100, 0, 3);

@@ -1266,9 +1266,6 @@ int skill_additional_effect(struct block_list* src, struct block_list *bl, uint1
 					if((sce=sc->data[SC_EDP]))
 						sc_start4(src,bl,SC_DPOISON,sce->val2, sce->val1,src->id,0,0,
 							skill_get_time2(ASC_EDP,sce->val1));
-
-					if((sce=sc->data[SC_SOULREAPER]) && rand()%100 < sce->val2)
-						pc_addsoulball(sd, skill_get_time2(SP_SOULREAPER, sce->val1), 5+3*pc_checkskill(sd, SP_SOULENERGY));		
 				}
 			}
 			break;
