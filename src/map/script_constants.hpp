@@ -1527,7 +1527,6 @@
 	export_constant(SC_BLOCKING_PLAY);
 	export_constant(SC_WEAPONBLOCK_ON);
 	export_constant(SC_ADAPTATION);
-	export_constant(SC_BASILICA_CELL);
 	export_constant(SC_ENTRY_QUEUE_APPLY_DELAY);
 	export_constant(SC_ENTRY_QUEUE_NOTIFY_ADMISSION_TIME_OUT);
 #ifdef RENEWAL

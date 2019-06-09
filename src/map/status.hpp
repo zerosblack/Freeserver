@@ -4,7 +4,6 @@
 #ifndef STATUS_HPP
 #define STATUS_HPP
 
-#include "../common/database.hpp"
 #include "../common/mmo.hpp"
 #include "../common/timer.hpp"
 
@@ -81,23 +80,6 @@ int status_get_refine_chance(enum refine_type refine_type, int refine, enum refi
 int status_get_refine_cost(enum refine_type refine_type, int type, enum refine_info_type what);
 bool status_get_refine_blacksmithBlessing(struct refine_bs_blessing* bs, enum refine_type type, int refine);
 struct refine_cost *status_get_refine_cost_(enum refine_type refine_type, int type);
-
-/// Weapon attack modification for size (size_fix.yml)
-struct s_sizefix_db {
-	uint16 small, medium, large;
-};
-
-class SizeFixDatabase : public TypesafeYamlDatabase<int32, s_sizefix_db> {
-public:
-	SizeFixDatabase() : TypesafeYamlDatabase("SIZE_FIX_DB", 1) {
-
-	}
-
-	const std::string getDefaultLocation();
-	uint64 parseBodyNode(const YAML::Node &node);
-};
-
-extern SizeFixDatabase size_fix_db;
 
 /// Status changes listing. These code are for use by the server.
 enum sc_type : int16 {
@@ -939,7 +921,6 @@ enum sc_type : int16 {
 	SC_SOULCURSE,
 
 	SC_ADAPTATION,
-	SC_BASILICA_CELL, // Used in renewal mode for cell_basilica only
 
 	SC_ENTRY_QUEUE_APPLY_DELAY,
 	SC_ENTRY_QUEUE_NOTIFY_ADMISSION_TIME_OUT,
