@@ -6546,7 +6546,7 @@ struct Damage battle_calc_magic_attack(struct block_list *src,struct block_list 
 #ifndef RENEWAL
 		ad.damage += battle_calc_cardfix(BF_MAGIC, src, target, nk, s_ele, 0, ad.damage, 0, ad.flag);
 #endif
-	} //Hint: Against plants damage will still be 1 at this point
+	//Hint: Against plants damage will still be 1 at this point
 
 	//Apply DAMAGE_DIV_FIX and check for min damage
 	battle_apply_div_fix(&ad, skill_id);

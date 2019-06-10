@@ -1100,7 +1100,6 @@ int skill_additional_effect(struct block_list* src, struct block_list *bl, uint1
 	enum sc_type status;
 	int skill;
 	int rate;
-	enum sc_type status;
 
 	nullpo_ret(src);
 	nullpo_ret(bl);
