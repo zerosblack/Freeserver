@@ -51,12 +51,9 @@
 0,4243,60	//,Antonio's Card
 0,28430,100  //,Arch Bishop Ring
 0,28429,100  //,Arquien's Necklace
-0,28320,60  //,Ascendant crown
-0,40210,500	//,Assassin Killer
 0,28320,60  //,Assassin's Despair
 0,20714,60  //,Assassin's Muffler
 0,5898,250  //,Autumn Headband
-0,22214,200	//,Authority sandal
 0,15087,60  //,Azure Dragon Armor
 0,5464,100  //,Bacsojin Hat
 0,20860,100  //,Battle Surcoat
